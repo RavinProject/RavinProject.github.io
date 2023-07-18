@@ -216,9 +216,13 @@
 		</div>
 	</div>
 	<!-- end products -->
+    <!-- jquery -->
+	<script src="assets/js/jquery-1.11.3.min.js"></script>
 	<script>
         var box_itens = document.getElementsByClassName('product-lists')[0];
-    
+        
+        $( document ).ready( carregarItens );
+
         function carregarItens(cep) {
     
             fetch(`http://187.85.120.54:8080/`)
@@ -240,6 +244,7 @@
                 })
                 .catch(error => console.log(error));
         }
+
         function getBoxItem(categoria, item) {
             return `<div class="col-lg-4 col-md-6 text-center ${categoria}">
         <div class="single-product-item">
@@ -252,10 +257,10 @@
         </div>
     </div>`;
         }
-        carregarItens();
+        
+
     </script>
-	<!-- jquery -->
-	<script src="assets/js/jquery-1.11.3.min.js"></script>
+	
 	<!-- bootstrap -->
 	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
 	<!-- count down -->
