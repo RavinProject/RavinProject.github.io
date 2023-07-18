@@ -189,105 +189,15 @@
                     <div class="product-filters">
                         <ul>
                             <li class="active" data-filter="*">Todos</li>
-                            <li data-filter=".bebidas">Bebidas</li>
-                            <li data-filter=".refeicoes">Refeições</li>
-                            <li data-filter=".sobremesas">Sobremesas</li>
+                            <li data-filter=".bebida">Bebidas</li>
+                            <li data-filter=".refeicao">Refeições</li>
+                            <li data-filter=".sobremesa">Sobremesas</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-			<div class="row product-lists">
-				<div class="col-lg-4 col-md-6 text-center bebidas">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="assets/img/products/coca600.jpg" alt=""></a>
-						</div>
-						<h3>Coca-Cola 600ml</h3>
-						<p class="product-price"><span>Un</span> R$ 8,00 </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-6 text-center bebidas">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="assets/img/products/agua500.jpg" alt=""></a>
-						</div>
-						<h3>Água Mineral 500ml</h3>
-						<p class="product-price"><span>Un</span> R$ 3,00 </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-6 text-center refeicoes">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="assets/img/products/alaminuta.jpg" alt=""></a>
-						</div>
-						<h3>Alaminuta</h3>
-						<p class="product-price"><span>Un</span> R$ 18,60 </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-6 text-center refeicoes">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="assets/img/products/macarronada.jpg" alt=""></a>
-						</div>
-						<h3>Macarronada</h3>
-						<p class="product-price"><span>Un</span> R$ 40,00 </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-6 text-center sobremesas">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="assets/img/products/pudim.jpg" alt=""></a>
-						</div>
-						<h3>Pudim</h3>
-						<p class="product-price"><span>Un</span> R$ 15,00 </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-6 text-center sobremesas">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="assets/img/products/mouse_chocolate.jpg" alt=""></a>
-						</div>
-						<h3>Mouse Chocolate</h3>
-						<p class="product-price"><span>Un</span> R$ 8,00 </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-6 text-center refeicoes">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="assets/img/products/strogonoff.png" alt=""></a>
-						</div>
-						<h3>Strogonoff</h3>
-						<p class="product-price"><span>Un</span> 35$ </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-6 text-center bebidas">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="assets/img/products/sucoLaranja.jpg" alt=""></a>
-						</div>
-						<h3>Suco Laranja</h3>
-						<p class="product-price"><span>Un</span> R$ 9,00 </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
-					</div>
-				</div>
-                <div class="col-lg-4 col-md-6 text-center sobremesas">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="assets/img/products/mouse_maracuja.jpg" alt=""></a>
-						</div>
-						<h3>Mouse Maracujá</h3>
-						<p class="product-price"><span>Un</span> R$ 9,00 </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
-					</div>
-				</div>
+			<div class="row product-lists">				
 			</div>
 <!-- PAGINAÇÃO
 			<div class="row">
@@ -306,7 +216,44 @@
 		</div>
 	</div>
 	<!-- end products -->
-	
+	<script>
+        var box_itens = document.getElementsByClassName('product-lists')[0];
+    
+        function carregarItens(cep) {
+    
+            fetch(`http://187.85.120.54:8080/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.erro) {
+                        console.log('deu ruim!');
+                        return;
+                    }
+                    let html = "";
+                    for (let categoria in data) {
+                        if (data.hasOwnProperty(categoria)) {
+                            data[categoria].forEach(item => {
+                                html += getBoxItem(categoria, item);
+                            });
+                        }
+                    }
+                    box_itens.innerHTML = html;
+                })
+                .catch(error => console.log(error));
+        }
+        function getBoxItem(categoria, item) {
+            return `<div class="col-lg-4 col-md-6 text-center ${categoria}">
+        <div class="single-product-item">
+            <div class="product-image">
+                <a href="single-product.html"><img src="assets/img/products/${item.imagem}" alt=""></a>
+            </div>
+            <h3>${item.nome}</h3>
+            <p class="product-price"><span>Un</span> R$ ${item.valor} </p>
+            <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
+        </div>
+    </div>`;
+        }
+        carregarItens();
+    </script>
 	<!-- jquery -->
 	<script src="assets/js/jquery-1.11.3.min.js"></script>
 	<!-- bootstrap -->
