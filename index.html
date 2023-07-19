@@ -30,9 +30,19 @@
 	<link rel="stylesheet" href="assets/css/main.css">
 	<!-- responsive -->
 	<link rel="stylesheet" href="assets/css/responsive.css">
-
+	<!-- Menu lateral colapsável -->
 	<link rel="stylesheet" href="assets/fonts/icomoon/style.css">
 	<link rel="stylesheet" href="assets/css/style.css">
+	<style type="text/css">
+		#myModal .modal-dialog {
+			-webkit-transform: translate(0,-50%);
+			-o-transform: translate(0,-50%);
+			transform: translate(0,-50%);
+			top: 50%;
+			margin: 0 auto;
+			max-width: fit-content;
+		}
+	</style>
 </head>
 <body>
 	<aside class="sidebar">
@@ -43,32 +53,20 @@
 		</div>
 		<div class="side-inner">
 
-			<div class="logo-wrap">
-			<div class="logo">
-			</div>
-			<span class="logo-text">Ravin</span>
-			</div>
-			
-			<div class="search-form">
-			<form action="#">
-				<span class="wrap-icon" style="display: flex; top: 3px;">
-				<span class="icon-search2"></span>
-				</span>
-				<input type="text" class="form-control" placeholder="Search...">
-			</form>
-			</div>
-			<div class="nav-menu">
-			<ul>
-				<li class="active"><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
-				<li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-videocam mr-3"></span><span class="menu-text">Mesas</span></a></li>
-				<li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-book mr-3"></span><span class="menu-text">Cardápio</span></a></li>
-				<li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-shopping-cart mr-3"></span><span class="menu-text">Comanda</span></a></li>
-				<!-- <li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-pie-chart mr-3"></span><span class="menu-text">Analytics</span></a></li>
-				<li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-cog mr-3"></span><span class="menu-text">Settings</span></a></li> -->
-			</ul>
-			</div>
-		</div>
-		
+        <div class="logo-wrap">
+          <div class="logo">
+          </div>
+          <span class="logo-text">Ravin</span>
+        </div>
+          
+        <div class="nav-menu">
+          <ul>
+            <li class="active"><a href="index.html" class="d-flex align-items-center"><span class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
+            <li><a href="cart.html" class="d-flex align-items-center"><span class="wrap-icon icon-shopping-cart mr-3"></span><span class="menu-text">Comanda</span></a></li>
+          </ul>
+        </div>
+      </div>
+      
     </aside>
 	<!--PreLoader-->
     <div class="loader">
@@ -154,7 +152,54 @@
 		</div>
 	</div>
 	<!-- end breadcrumb section -->
-
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h3>Vertical Center Modal</h3>
+				<a href="#myModal" data-toggle="modal">Click to trigger modal</a>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<!-- single product -->
+	<div class="single-product mt-80 mb-80">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-5">
+					<div class="single-product-img">
+						<img src="assets/img/products/product-img-5.jpg" alt="">
+					</div>
+				</div>
+				<div class="col-md-7">
+					<div class="single-product-content">
+						<h3>Green apples have polyphenols</h3>
+						<p class="single-product-pricing"><span>Per Kg</span> $50</p>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta sint dignissimos, rem commodi cum voluptatem quae reprehenderit repudiandae ea tempora incidunt ipsa, quisquam animi perferendis eos eum modi! Tempora, earum.</p>
+						<div class="single-product-form">
+							<form action="index.html">
+								<input type="number" placeholder="0">
+							</form>
+							<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+							<p><strong>Categories: </strong>Fruits, Organic</p>
+						</div>
+						<h4>Share:</h4>
+						<ul class="product-share">
+							<li><a href=""><i class="fab fa-facebook-f"></i></a></li>
+							<li><a href=""><i class="fab fa-twitter"></i></a></li>
+							<li><a href=""><i class="fab fa-google-plus-g"></i></a></li>
+							<li><a href=""><i class="fab fa-linkedin"></i></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end single product -->
+			</div>
+		</div>
+	</div>
 	<!-- products -->
 	<div class="product-section mt-150 mb-150">
 		<div class="container">
