@@ -36,39 +36,39 @@
 </head>
 <body>
 	<aside class="sidebar">
-      <div class="toggle">
-        <a href="#" class="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
-              <span></span>
-            </a>
-      </div>
-      <div class="side-inner">
+		<div class="toggle">
+			<a href="#" class="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
+				<span></span>
+				</a>
+		</div>
+		<div class="side-inner">
 
-        <div class="logo-wrap">
-          <div class="logo">
-          </div>
-          <span class="logo-text">Ravin</span>
-        </div>
-          
-        <div class="search-form">
-          <form action="#">
-            <span class="wrap-icon" style="display: flex; top: 3px;">
-              <span class="icon-search2"></span>
-            </span>
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
-        </div>
-        <div class="nav-menu">
-          <ul>
-            <li class="active"><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
-            <li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-videocam mr-3"></span><span class="menu-text">Mesas</span></a></li>
-            <li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-book mr-3"></span><span class="menu-text">Cardápio</span></a></li>
-            <li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-shopping-cart mr-3"></span><span class="menu-text">Comanda</span></a></li>
-            <!-- <li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-pie-chart mr-3"></span><span class="menu-text">Analytics</span></a></li>
-            <li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-cog mr-3"></span><span class="menu-text">Settings</span></a></li> -->
-          </ul>
-        </div>
-      </div>
-      
+			<div class="logo-wrap">
+			<div class="logo">
+			</div>
+			<span class="logo-text">Ravin</span>
+			</div>
+			
+			<div class="search-form">
+			<form action="#">
+				<span class="wrap-icon" style="display: flex; top: 3px;">
+				<span class="icon-search2"></span>
+				</span>
+				<input type="text" class="form-control" placeholder="Search...">
+			</form>
+			</div>
+			<div class="nav-menu">
+			<ul>
+				<li class="active"><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
+				<li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-videocam mr-3"></span><span class="menu-text">Mesas</span></a></li>
+				<li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-book mr-3"></span><span class="menu-text">Cardápio</span></a></li>
+				<li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-shopping-cart mr-3"></span><span class="menu-text">Comanda</span></a></li>
+				<!-- <li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-pie-chart mr-3"></span><span class="menu-text">Analytics</span></a></li>
+				<li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-cog mr-3"></span><span class="menu-text">Settings</span></a></li> -->
+			</ul>
+			</div>
+		</div>
+		
     </aside>
 	<!--PreLoader-->
     <div class="loader">
@@ -91,9 +91,6 @@
 						<!-- menu start -->
 						<nav class="main-menu">
 							<ul>
-								<li class="header-icons">
-									<a href="#"><i class="header-icons fa-solid fa-house"></i></a>
-								</li>
 								<li>
 									<a class="header-icons" href="#">
 										<i class="header-icons fa-solid fa-table-cells-large"></i>
@@ -102,7 +99,7 @@
 								</li>
 								<li>
 									<a class="header-icons" href="#">
-										<span id="totalGasto">{insert valor total}</span>
+										<span id="totalGasto"></span>
 									</a>
 								</li>
 								<li>
@@ -243,24 +240,7 @@
                     }
                     box_itens.innerHTML = html;
                     // carrega os actions do template
-                    // projects filters isotop
-					$(".product-filters li").on('click', function () {
-
-						$(".product-filters li").removeClass("active");
-						$(this).addClass("active");
-
-						var selector = $(this).attr('data-filter');
-
-						$(".product-lists").isotope({
-							filter: selector,
-						});
-
-					});
-
-					// isotop inner
-					setTimeout(function() {
-						$(".product-lists").isotope();
-					}, 1000);
+                    loaderActions();
                 })
                 .catch(error => console.log(error));
         }
