@@ -14,6 +14,35 @@ function atualizarTotal() {
     document.getElementById("totalGasto").innerText = total.toFixed(2);
 }
 
+function atualizarNumeroComanda() {
+    // Recuperar a comanda do localStorage
+    var comanda = JSON.parse(localStorage.getItem('comanda'));
+
+    if(comanda !== null) {
+        // Atualizar o número da comanda na interface do usuário
+        document.getElementById("numero-comanda").innerText = comanda.numero;
+    }
+}
+
+var comanda = {
+    "numero": 12222,
+    "itens": [
+        {
+            "item": {"nome": "Item 1", "valor": 10.0},
+            "quantidade": 2,
+            "total": 2323230.0
+        },
+        {
+            "item": {"nome": "Item 2", "valor": 15.0},
+            "quantidade": 3,
+            "total": 45.0
+        }
+    ],
+    "total" : 65.0
+};
+
+localStorage.setItem('comanda', JSON.stringify(comanda));
+
 function loaderActions(){
     // testimonial sliders
     $(".testimonial-sliders").owlCarousel({
@@ -176,6 +205,7 @@ function loaderActions(){
 
     $(document).ready(function($){
         atualizarTotal();
+        atualizarNumeroComanda();
     });
 
     jQuery(window).on("load",function(){
