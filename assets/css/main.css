@@ -547,7 +547,7 @@ a.navbar-brand img {
 
 nav.main-menu ul {
   margin: 0;
-  padding: 0;
+  padding-left: 100px;
   list-style: none;
 }
 
@@ -560,6 +560,7 @@ nav.main-menu ul li a {
   font-weight: 700;
   display: block;
   padding: 15px;
+  font-size: large;
 }
 
 nav.main-menu ul > li {
