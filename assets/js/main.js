@@ -1,3 +1,19 @@
+function atualizarTotal() {
+    // Recuperar a comanda do localStorage
+    var comanda = JSON.parse(localStorage.getItem('comanda'));
+    var total = 0;
+
+    if(comanda !== null && comanda.itens !== null) {
+        // Calcular o total
+        for(var i = 0; i < comanda.itens.length; i++) {
+            total += comanda.itens[i].total;
+        }
+    }
+
+    // Atualizar o total na interface do usuário
+    document.getElementById("totalGasto").innerText = total.toFixed(2);
+}
+
 function loaderActions(){
     // testimonial sliders
     $(".testimonial-sliders").owlCarousel({
@@ -78,7 +94,7 @@ function loaderActions(){
         $this.countdown(finalDate, function(event) {
             var $this = $(this).html(event.strftime('' + '<div class="counter-column"><div class="inner"><span class="count">%D</span>Days</div></div> ' + '<div class="counter-column"><div class="inner"><span class="count">%H</span>Hours</div></div>  ' + '<div class="counter-column"><div class="inner"><span class="count">%M</span>Mins</div></div>  ' + '<div class="counter-column"><div class="inner"><span class="count">%S</span>Secs</div></div>'));
         });
-     });
+    });
     }
 
     // // projects filters isotop
@@ -131,8 +147,6 @@ function loaderActions(){
         $(".hero-btns").addClass("animated fadeInUp").css({'opacity': '0', 'animation-delay' : '0.5s'});
     });
 
-   
-
     // stikcy js
     $("#sticker").sticky({
         topSpacing: 0
@@ -152,39 +166,33 @@ function loaderActions(){
     $(".close-btn").on("click", function() {
         $(".search-area").removeClass("search-active");
     });
+
+
+    atualizarTotal();
 }
+
 (function ($) {
     "use strict";
 
     $(document).ready(function($){
-        
-        
-    
+        atualizarTotal();
     });
-
-    
 
     jQuery(window).on("load",function(){
         jQuery(".loader").fadeOut(1000);
     });
 
-
 }(jQuery));
-
 
 /**
  * actionbar
  */
 $(function() {
-
     'use strict';
-  
+
     $('.js-menu-toggle').click(function(e) {
-  
         var $this = $(this);
-  
-        
-  
+
         if ( $('body').hasClass('show-sidebar') ) {
             $('body').removeClass('show-sidebar');
             $this.removeClass('active');
@@ -192,22 +200,17 @@ $(function() {
             $('body').addClass('show-sidebar');	
             $this.addClass('active');
         }
-  
         e.preventDefault();
-  
     });
-  
+
     // click outisde offcanvas
-      $(document).mouseup(function(e) {
-      var container = $(".sidebar");
-      if (!container.is(e.target) && container.has(e.target).length === 0) {
+    $(document).mouseup(function(e) {
+    var container = $(".sidebar");
+    if (!container.is(e.target) && container.has(e.target).length === 0) {
         if ( $('body').hasClass('show-sidebar') ) {
-                  $('body').removeClass('show-sidebar');
-                  $('body').find('.js-menu-toggle').removeClass('active');
-              }
-      }
-      }); 
-  
-      
-  
-  });
+                $('body').removeClass('show-sidebar');
+                $('body').find('.js-menu-toggle').removeClass('active');
+            }
+    }
+    }); 
+});
