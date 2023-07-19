@@ -217,50 +217,7 @@
 	</div>
 	<!-- end products -->
     <!-- jquery -->
-	<script src="assets/js/jquery-1.11.3.min.js"></script>
-	<script>
-        var box_itens = document.getElementsByClassName('product-lists')[0];
-        
-        $( document ).ready( carregarItens );
-
-        function carregarItens(cep) {
-    
-            fetch(`http://187.85.120.54:8080/`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.erro) {
-                        console.log('deu ruim!');
-                        return;
-                    }
-                    let html = "";
-                    for (let categoria in data) {
-                        if (data.hasOwnProperty(categoria)) {
-                            data[categoria].forEach(item => {
-                                html += getBoxItem(categoria, item);
-                            });
-                        }
-                    }
-                    box_itens.innerHTML = html;
-                })
-                .catch(error => console.log(error));
-        }
-
-        function getBoxItem(categoria, item) {
-            return `<div class="col-lg-4 col-md-6 text-center ${categoria}">
-        <div class="single-product-item">
-            <div class="product-image">
-                <a href="single-product.html"><img src="assets/img/products/${item.imagem}" alt=""></a>
-            </div>
-            <h3>${item.nome}</h3>
-            <p class="product-price"><span>Un</span> R$ ${item.valor} </p>
-            <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
-        </div>
-    </div>`;
-        }
-        
-
-    </script>
-	
+	<script src="assets/js/jquery-1.11.3.min.js"></script>	
 	<!-- bootstrap -->
 	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
 	<!-- count down -->
@@ -279,6 +236,45 @@
 	<script src="assets/js/sticker.js"></script>
 	<!-- main js -->
 	<script src="assets/js/main.js"></script>
+    <script>
+        function carregarItens(cep) {
+            var box_itens = document.getElementsByClassName('product-lists')[0];
+            fetch(`http://187.85.120.54:8080/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.erro) {
+                        console.log('deu ruim!');
+                        return;
+                    }
+                    let html = "";
+                    for (let categoria in data) {
+                        if (data.hasOwnProperty(categoria)) {
+                            data[categoria].forEach(item => {
+                                html += getBoxItem(categoria, item);
+                            });
+                        }
+                    }
+                    box_itens.innerHTML = html;
+                    // carrega os actions do template
+                    loaderActions();
+                })
+                .catch(error => console.log(error));
+        }
 
+        function getBoxItem(categoria, item) {
+            return `<div class="col-lg-4 col-md-6 text-center ${categoria}">
+        <div class="single-product-item">
+            <div class="product-image">
+                <a href="single-product.html"><img src="assets/img/products/${item.imagem}" alt=""></a>
+            </div>
+            <h3>${item.nome}</h3>
+            <p class="product-price"><span>Un</span> R$ ${item.valor} </p>
+            <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
+        </div>
+    </div>`;
+        }
+        
+        carregarItens();
+    </script>
 </body>
 </html>
