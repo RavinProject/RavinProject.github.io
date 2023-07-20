@@ -5,8 +5,6 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description"
-		content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
 	<!-- title -->
 	<title>Shop</title>
@@ -35,6 +33,16 @@
 
 	<link rel="stylesheet" href="assets/fonts/icomoon/style.css">
 	<link rel="stylesheet" href="assets/css/style.css">
+	<style type="text/css">
+		#modalProdutoSelecionado .modal-dialog {
+			-webkit-transform: translate(0, -50%);
+			-o-transform: translate(0, -50%);
+			transform: translate(0, -50%);
+			top: 50%;
+			margin: 0 auto;
+			max-width: fit-content;
+		}
+	</style>
 </head>
 
 <body>
@@ -51,7 +59,7 @@
 				</div>
 				<span class="logo-text">Ravin</span>
 			</div>
-			
+
 			<div class="nav-menu">
 				<ul>
 					<li class="active"><a href="index.html" class="d-flex align-items-center"><span
@@ -151,7 +159,7 @@
 	</div>
 	<!-- end breadcrumb section -->
 
-	<div class="modal fade" id="myModal">
+	<div class="modal fade" id="modalProdutoSelecionado">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<!-- single product -->
@@ -262,9 +270,6 @@
 	<script src="assets/js/templateControl.js"></script>
 	<!-- Ravin APP Scripts -->
 	<script src="assets/js/ravin.js"></script>
-	<script>
-		// carregarItens();
-	</script>
 </body>
 
 </html>
