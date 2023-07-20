@@ -41,10 +41,20 @@
 			top: 50%;
 			margin: 0 auto;
 			max-width: fit-content;
+			min-width: 60vw;
 		}
 	</style>
 </head>
 <body>
+	<!--PreLoader-->
+	<div class="loader">
+		<div class="loader-inner">
+			<div class="circle"></div>
+		</div>
+	</div>
+	<!--PreLoader Ends-->
+
+	<!-- Sidebar start -->
 	<aside class="sidebar">
 		<div class="toggle">
 			<a href="#" class="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
@@ -54,27 +64,20 @@
 		<div class="side-inner">
 
         <div class="logo-wrap">
-          <div class="logo">
-          </div>
-          <span class="logo-text">Ravin</span>
-        </div>
-          
-        <div class="nav-menu">
-          <ul>
-            <li class="active"><a href="index.html" class="d-flex align-items-center"><span class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
-            <li><a href="cart.html" class="d-flex align-items-center"><span class="wrap-icon icon-shopping-cart mr-3"></span><span class="menu-text">Comanda</span></a></li>
-          </ul>
-        </div>
-      </div>
-      
+			<div class="logo">
+			</div>
+			<span class="logo-text">Ravin</span>
+			</div>
+			
+			<div class="nav-menu">
+			<ul>
+				<li class="active"><a href="index.html" class="d-flex align-items-center"><span class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
+				<li><a href="cart.html" class="d-flex align-items-center"><span class="wrap-icon icon-shopping-cart mr-3"></span><span class="menu-text">Comanda</span></a></li>
+			</ul>
+			</div>
+		</div>
     </aside>
-	<!--PreLoader-->
-    <div class="loader">
-        <div class="loader-inner">
-            <div class="circle"></div>
-        </div>
-    </div>
-    <!--PreLoader Ends-->
+	<!-- Sidebar end -->
 	
 	<!-- header -->
 	<div class="top-header-area" id="sticker">
@@ -82,9 +85,6 @@
 			<div class="row">
 				<div class="col-lg-12 col-sm-12 text-center">
 					<div class="main-menu-wrap">
-						<!-- logo -->
-
-						<!-- logo -->
 
 						<!-- menu start -->
 						<nav class="main-menu">
@@ -103,15 +103,12 @@
 								<li>
 									<div class="header-icons">
 										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
-										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
 									</div>
 								</li>
 							</ul>
 						</nav>
-						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
 						<div class="mobile-menu"></div>
 						<!-- menu end -->
-
 					</div>
 				</div>
 			</div>
@@ -152,56 +149,46 @@
 		</div>
 	</div>
 	<!-- end breadcrumb section -->
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<h3>Vertical Center Modal</h3>
-				<a href="#myModal" data-toggle="modal">Click to trigger modal</a>
-			</div>
-		</div>
-	</div>
+
+	<!-- Modal start -->
 	<div class="modal fade" id="myModal">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<!-- single product -->
-	<div class="single-product mt-80 mb-80">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-5">
-					<div class="single-product-img">
-						<img src="assets/img/products/product-img-5.jpg" alt="">
-					</div>
-				</div>
-				<div class="col-md-7">
-					<div class="single-product-content">
-						<h3>Green apples have polyphenols</h3>
-						<p class="single-product-pricing"><span>Per Kg</span> $50</p>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta sint dignissimos, rem commodi cum voluptatem quae reprehenderit repudiandae ea tempora incidunt ipsa, quisquam animi perferendis eos eum modi! Tempora, earum.</p>
-						<div class="single-product-form">
-							<form action="index.html">
-								<input type="number" placeholder="0">
-							</form>
-							<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
-							<p><strong>Categories: </strong>Fruits, Organic</p>
+				<div class="single-product mt-80 mb-80">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-5">
+								<div class="single-product-img">
+									<img src="assets/img/products/product-img-5.jpg" alt="">
+								</div>
+							</div>
+							<div class="col-md-7">
+								<div class="single-product-content">
+									<h3>Título</h3>
+									<p class="single-product-pricing"><span>Unidade</span> R$ 00</p>
+									<p> </p>
+									<div class="single-product-form">
+										<form action="index.html">
+											<input type="number" placeholder="0">
+										</form>
+										<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho</a>
+										<p><strong>Categorias: </strong><span id="modal-categoria">Categoria</span></p>
+									</div>
+								</div>
+							</div>
 						</div>
-						<h4>Share:</h4>
-						<ul class="product-share">
-							<li><a href=""><i class="fab fa-facebook-f"></i></a></li>
-							<li><a href=""><i class="fab fa-twitter"></i></a></li>
-							<li><a href=""><i class="fab fa-google-plus-g"></i></a></li>
-							<li><a href=""><i class="fab fa-linkedin"></i></a></li>
-						</ul>
 					</div>
 				</div>
+				<!-- end single product -->
 			</div>
 		</div>
 	</div>
-	<!-- end single product -->
-			</div>
-		</div>
-	</div>
+
+	<!-- Modal end -->
+
 	<!-- products -->
-	<div class="product-section mt-150 mb-150">
+	<div class="product-section mt-100 mb-150">
 		<div class="container">
 
 			<div class="row">
@@ -291,19 +278,41 @@
         }
 
         function getBoxItem(categoria, item) {
-            return `<div class="col-lg-4 col-md-6 text-center ${categoria}">
-        <div class="single-product-item">
-            <div class="product-image">
-                <a href="single-product.html"><img src="assets/img/products/${item.imagem}" alt=""></a>
-            </div>
-            <h3>${item.nome}</h3>
-            <p class="product-price"><span>Un</span> R$ ${item.valor} </p>
-            <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
-        </div>
-    </div>`;
-        }
-        
+			var imageURL = "assets/img/products/" + item.imagem;
+			// Note que adicionamos um data-item attribute para salvar a string JSON do item
+			// Também adicionamos a classe .product-item para podermos adicionar um evento de clique facilmente
+			return `
+				<div class="product-item col-lg-4 col-md-6 text-center ${item.categoria}" data-item='${JSON.stringify(item)}'>
+					<div class="single-product-item">
+						<img src="${imageURL}" alt="${item.nome}">
+					</div>
+						<h3>${item.nome}</h3>
+						<p>${item.descritivo}</p>
+						<p class="product-price"><span>Unidade</span> R$ ${item.valor}</p>
+					</div>
+				</div>
+			`;
+		}
         carregarItens();
+
+
+		// codigo regis
+
+		/*
+		function getBoxItem(categoria, item) {
+            return `<div class="col-lg-4 col-md-6 text-center ${categoria}">
+				<div class="single-product-item">
+
+					<div class="product-image">
+						<a href="single-product.html"><img src="assets/img/products/${item.imagem}" alt=""></a>
+					</div>
+					<h3>${item.nome}</h3>
+					<p class="product-price"><span>Un</span> R$ ${item.valor} </p>
+					<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
+				</div>
+			</div>`;
+        }
+		*/
     </script>
 </body>
 </html>

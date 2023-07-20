@@ -24,6 +24,18 @@ function atualizarNumeroComanda() {
     }
 }
 
+// Caminho da imagem do modal precisa ser mudado mais tarde se bugar
+function preencherModal(item) {
+    var imageURL = "assets/img/products/" + item.imagem;
+    document.querySelector('#myModal .single-product-img img').src = imageURL;
+    document.querySelector('#myModal .single-product-content h3').innerText = item.nome;
+    document.querySelector('#myModal .single-product-content .single-product-pricing').innerText = 'R$' + item.valor;
+    document.querySelector('#myModal .single-product-content p:not(.single-product-pricing)').innerText = item.descritivo;
+    document.querySelector('#myModal #modal-categoria').innerText = item.categoria;
+}
+
+// Código de teste que insere objeto de comanda no localStorage
+
 var comanda = {
     "numero": 12222,
     "itens": [
@@ -43,7 +55,21 @@ var comanda = {
 
 localStorage.setItem('comanda', JSON.stringify(comanda));
 
+// loaderActions que carrega a maioria das funções
+
 function loaderActions(){
+    
+    // Adiciona evento de clique no Modal
+
+    document.querySelectorAll('.product-item').forEach(itemElement => {
+        itemElement.addEventListener('click', function() {
+            var item = JSON.parse(this.getAttribute('data-item'));
+            preencherModal(item);
+            $('#myModal').modal('show'); // Abre o modal com jQuery
+        });
+    });
+
+
     // testimonial sliders
     $(".testimonial-sliders").owlCarousel({
         items: 1,
