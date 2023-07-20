@@ -1,9 +1,8 @@
-/** INIICIALIZADORES */
+/** INIICIALIZADORES UNIVERSAIS*/
 (function ($) {
     $(document).ready(function ($) {
         atualizarTotal();
         atualizarNumeroComanda();
-        carregarItens();
     });
 }(jQuery));
 /** FIM */
