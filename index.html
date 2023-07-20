@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
 	<!-- title -->
 	<title>Shop</title>
@@ -30,21 +30,24 @@
 	<link rel="stylesheet" href="assets/css/main.css">
 	<!-- responsive -->
 	<link rel="stylesheet" href="assets/css/responsive.css">
-	<!-- Menu lateral colapsável -->
+	<!-- menu colapsável -->
 	<link rel="stylesheet" href="assets/fonts/icomoon/style.css">
 	<link rel="stylesheet" href="assets/css/style.css">
+	<!-- personalizações nesta página somente -->
 	<style type="text/css">
-		#myModal .modal-dialog {
-			-webkit-transform: translate(0,-50%);
-			-o-transform: translate(0,-50%);
-			transform: translate(0,-50%);
+		#modalProdutoSelecionado .modal-dialog {
+			-webkit-transform: translate(0, -50%);
+			-o-transform: translate(0, -50%);
+			transform: translate(0, -50%);
 			top: 50%;
 			margin: 0 auto;
 			max-width: fit-content;
 			min-width: 60vw;
 		}
 	</style>
+  
 </head>
+
 <body>
 	<!--PreLoader-->
 	<div class="loader">
@@ -59,26 +62,34 @@
 		<div class="toggle">
 			<a href="#" class="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
 				<span></span>
-				</a>
+			</a>
 		</div>
 		<div class="side-inner">
 
-        <div class="logo-wrap">
-			<div class="logo">
+			<div class="logo-wrap">
+				<div class="logo">
+				</div>
+				<span class="logo-text">Ravin</span>
 			</div>
-			<span class="logo-text">Ravin</span>
-			</div>
-			
 			<div class="nav-menu">
-			<ul>
-				<li class="active"><a href="index.html" class="d-flex align-items-center"><span class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
-				<li><a href="cart.html" class="d-flex align-items-center"><span class="wrap-icon icon-shopping-cart mr-3"></span><span class="menu-text">Comanda</span></a></li>
-			</ul>
+				<ul>
+					<li class="active"><a href="index.html" class="d-flex align-items-center"><span
+								class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
+					<li><a href="cart.html" class="d-flex align-items-center"><span
+								class="wrap-icon icon-shopping-cart mr-3"></span><span
+								class="menu-text">Comanda</span></a></li>
+				</ul>
 			</div>
+    </div>
+	</aside>
+	<!--PreLoader-->
+	<div class="loader">
+		<div class="loader-inner">
+			<div class="circle"></div>
 		</div>
-    </aside>
-	<!-- Sidebar end -->
-	
+	</div>
+	<!--PreLoader Ends-->
+
 	<!-- header -->
 	<div class="top-header-area" id="sticker">
 		<div class="container">
@@ -102,7 +113,10 @@
 								</li>
 								<li>
 									<div class="header-icons">
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+										<a class="shopping-cart" href="cart.html"><i
+												class="fas fa-shopping-cart"></i></a>
+										<a class="mobile-hide search-bar-icon" href="#"><i
+												class="fas fa-search"></i></a>
 									</div>
 								</li>
 							</ul>
@@ -134,7 +148,7 @@
 		</div>
 	</div>
 	<!-- end search arewa -->
-	
+
 	<!-- breadcrumb-section -->
 	<div class="breadcrumb-section breadcrumb-bg">
 		<div class="container">
@@ -149,9 +163,7 @@
 		</div>
 	</div>
 	<!-- end breadcrumb section -->
-
-	<!-- Modal start -->
-	<div class="modal fade" id="myModal">
+	<div class="modal fade" id="modalProdutoSelecionado">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<!-- single product -->
@@ -165,16 +177,26 @@
 							</div>
 							<div class="col-md-7">
 								<div class="single-product-content">
-									<h3>Título</h3>
-									<p class="single-product-pricing"><span>Unidade</span> R$ 00</p>
-									<p> </p>
+									<h3>Green apples have polyphenols</h3>
+									<p class="single-product-pricing"><span>Per Kg</span> $50</p>
+									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta sint dignissimos,
+										rem commodi cum voluptatem quae reprehenderit repudiandae ea tempora incidunt
+										ipsa, quisquam animi perferendis eos eum modi! Tempora, earum.</p>
 									<div class="single-product-form">
 										<form action="index.html">
 											<input type="number" placeholder="0">
 										</form>
-										<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho</a>
-										<p><strong>Categorias: </strong><span id="modal-categoria">Categoria</span></p>
+										<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to
+											Cart</a>
+										<p><strong>Categories: </strong>Fruits, Organic</p>
 									</div>
+									<h4>Share:</h4>
+									<ul class="product-share">
+										<li><a href=""><i class="fab fa-facebook-f"></i></a></li>
+										<li><a href=""><i class="fab fa-twitter"></i></a></li>
+										<li><a href=""><i class="fab fa-google-plus-g"></i></a></li>
+										<li><a href=""><i class="fab fa-linkedin"></i></a></li>
+									</ul>
 								</div>
 							</div>
 						</div>
@@ -185,29 +207,27 @@
 		</div>
 	</div>
 
-	<!-- Modal end -->
-
 	<!-- products -->
 	<div class="product-section mt-100 mb-150">
 		<div class="container">
 
 			<div class="row">
-                <div class="col-md-12">
-                    <div class="product-filters">
-                        <ul>
-                            <li class="active" data-filter="*">Todos</li>
-                            <li data-filter=".bebida">Bebidas</li>
-                            <li data-filter=".refeicao">Refeições</li>
-                            <li data-filter=".sobremesa">Sobremesas</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-			<div class="row product-lists">				
+				<div class="col-md-12">
+					<div class="product-filters">
+						<ul>
+							<li class="active" data-filter="*">Todos</li>
+							<li data-filter=".bebida">Bebidas</li>
+							<li data-filter=".refeicao">Refeições</li>
+							<li data-filter=".sobremesa">Sobremesas</li>
+						</ul>
+					</div>
+				</div>
 			</div>
-<!-- PAGINAÇÃO
-			<div class="row">
+
+			<div class="row product-lists">
+			</div>
+			<!-- PAGINAÇÃO -->
+			<!-- <div class="row">
 				<div class="col-lg-12 text-center">
 					<div class="pagination-wrap">
 						<ul>
@@ -220,6 +240,7 @@
 					</div>
 				</div>
 			</div> -->
+			<!-- FIM PAGINAÇÃO -->
 		</div>
 	</div>
 	<!-- end products -->
@@ -231,9 +252,9 @@
 	</div>
 
 	<!-- fim footer invisível -->
-	
-    <!-- jquery -->
-	<script src="assets/js/jquery-1.11.3.min.js"></script>	
+
+	<!-- jquery -->
+	<script src="assets/js/jquery-1.11.3.min.js"></script>
 	<!-- bootstrap -->
 	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
 	<!-- count down -->
@@ -251,68 +272,15 @@
 	<!-- sticker js -->
 	<script src="assets/js/sticker.js"></script>
 	<!-- main js -->
-	<script src="assets/js/main.js"></script>
-    <script>
-        function carregarItens(cep) {
-            var box_itens = document.getElementsByClassName('product-lists')[0];
-            fetch(`http://187.85.120.54:8080/`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.erro) {
-                        console.log('deu ruim!');
-                        return;
-                    }
-                    let html = "";
-                    for (let categoria in data) {
-                        if (data.hasOwnProperty(categoria)) {
-                            data[categoria].forEach(item => {
-                                html += getBoxItem(categoria, item);
-                            });
-                        }
-                    }
-                    box_itens.innerHTML = html;
-                    // carrega os actions do template
-                    loaderActions();
-                })
-                .catch(error => console.log(error));
-        }
-
-        function getBoxItem(categoria, item) {
-			var imageURL = "assets/img/products/" + item.imagem;
-			// Note que adicionamos um data-item attribute para salvar a string JSON do item
-			// Também adicionamos a classe .product-item para podermos adicionar um evento de clique facilmente
-			return `
-				<div class="product-item col-lg-4 col-md-6 text-center ${item.categoria}" data-item='${JSON.stringify(item)}'>
-					<div class="single-product-item">
-						<img src="${imageURL}" alt="${item.nome}">
-					</div>
-						<h3>${item.nome}</h3>
-						<p>${item.descritivo}</p>
-						<p class="product-price"><span>Unidade</span> R$ ${item.valor}</p>
-					</div>
-				</div>
-			`;
-		}
-        carregarItens();
-
-
-		// codigo regis
-
-		/*
-		function getBoxItem(categoria, item) {
-            return `<div class="col-lg-4 col-md-6 text-center ${categoria}">
-				<div class="single-product-item">
-
-					<div class="product-image">
-						<a href="single-product.html"><img src="assets/img/products/${item.imagem}" alt=""></a>
-					</div>
-					<h3>${item.nome}</h3>
-					<p class="product-price"><span>Un</span> R$ ${item.valor} </p>
-					<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
-				</div>
-			</div>`;
-        }
-		*/
-    </script>
+	<script src="assets/js/templateControl.js"></script>
+	<!-- Ravin APP Scripts -->
+	<script src="assets/js/ravin.js"></script>
+	<script>
+		// SCRIPTS ESPECÍFICOS PARA ESTA PÁGINA
+		 $(document).ready(function ($) {
+        	carregarItens();
+    	});
+	</script>
 </body>
+
 </html>
