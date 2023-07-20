@@ -1,3 +1,13 @@
+/** INIICIALIZADORES */
+(function ($) {
+    $(document).ready(function ($) {
+        atualizarTotal();
+        atualizarNumeroComanda();
+        carregarItens();
+    });
+}(jQuery));
+/** FIM */
+
 function atualizarTotal() {
     // Recuperar a comanda do localStorage
     var comanda = JSON.parse(localStorage.getItem('comanda'));
@@ -86,13 +96,3 @@ function carregarItens() {
         </div>`;
     }
 }
-
-/** INIICIALIZADORES */
-(function ($) {
-    $(document).ready(function ($) {
-        atualizarTotal();
-        atualizarNumeroComanda();
-        carregarItens();
-    });
-}(jQuery));
-/** FIM */
