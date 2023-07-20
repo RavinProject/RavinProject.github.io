@@ -1,4 +1,3 @@
-
 function loaderActions(){
     console.log("configurando ações");
     // projects filters isotop
@@ -102,7 +101,6 @@ function loaderActions(){
          });
         }
 
-        
         // magnific popup
         $('.popup-youtube').magnificPopup({
             disableOn: 700,
