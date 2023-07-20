@@ -5,8 +5,6 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description"
-		content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
 	<!-- title -->
 	<title>Shop</title>
@@ -32,11 +30,12 @@
 	<link rel="stylesheet" href="assets/css/main.css">
 	<!-- responsive -->
 	<link rel="stylesheet" href="assets/css/responsive.css">
-	<!-- Menu lateral colapsável -->
+	<!-- menu colapsável -->
 	<link rel="stylesheet" href="assets/fonts/icomoon/style.css">
 	<link rel="stylesheet" href="assets/css/style.css">
+	<!-- personalizações nesta página somente -->
 	<style type="text/css">
-		#myModal .modal-dialog {
+		#modalProdutoSelecionado .modal-dialog {
 			-webkit-transform: translate(0, -50%);
 			-o-transform: translate(0, -50%);
 			transform: translate(0, -50%);
@@ -45,6 +44,7 @@
 			max-width: fit-content;
 		}
 	</style>
+  
 </head>
 
 <body>
@@ -61,7 +61,6 @@
 				</div>
 				<span class="logo-text">Ravin</span>
 			</div>
-
 			<div class="nav-menu">
 				<ul>
 					<li class="active"><a href="index.html" class="d-flex align-items-center"><span
@@ -71,8 +70,7 @@
 								class="menu-text">Comanda</span></a></li>
 				</ul>
 			</div>
-		</div>
-
+    </div>
 	</aside>
 	<!--PreLoader-->
 	<div class="loader">
@@ -160,7 +158,7 @@
 		</div>
 	</div>
 	<!-- end breadcrumb section -->
-	<div class="modal fade" id="myModal">
+	<div class="modal fade" id="modalProdutoSelecionado">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<!-- single product -->
@@ -267,9 +265,9 @@
 	<script src="assets/js/jquery.meanmenu.min.js"></script>
 	<!-- sticker js -->
 	<script src="assets/js/sticker.js"></script>
-	<!-- Controle do Template -->
+	<!-- main js -->
 	<script src="assets/js/templateControl.js"></script>
-	<!-- Funções APP Ravin -->
+	<!-- Ravin APP Scripts -->
 	<script src="assets/js/ravin.js"></script>
 </body>
 

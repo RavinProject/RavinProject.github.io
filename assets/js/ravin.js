@@ -8,7 +8,6 @@
 }(jQuery));
 /** FIM */
 
-
 function atualizarTotal() {
     // Recuperar a comanda do localStorage
     var comanda = JSON.parse(localStorage.getItem('comanda'));
@@ -88,7 +87,7 @@ function carregarItens() {
         return `<div class="col-lg-4 col-md-6 text-center ${categoria}">
         <div class="single-product-item">
             <div class="product-image">
-                <a href="#myModal" data-toggle="modal"><img src="assets/img/products/${item.imagem}" alt=""></a>
+                <a href="#modalProdutoSelecionado" data-toggle="modal"><img src="assets/img/products/${item.imagem}" alt=""></a>
             </div>
             <h3>${item.nome}</h3>
             <p class="product-price"><span>Un</span> R$ ${item.valor} </p>
