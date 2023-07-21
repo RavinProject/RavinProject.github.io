@@ -57,7 +57,7 @@ localStorage.setItem('comanda', JSON.stringify(comanda));
  */
 function carregarItens() {
     var box_itens = document.getElementsByClassName('product-lists')[0];
-    fetch(`http://localhost:8080/`)
+    fetch(`https://api.npoint.io/c442d6ba06c605014033`)
         .then(response => response.json())
         .then(data => {
             if (data.erro) {
