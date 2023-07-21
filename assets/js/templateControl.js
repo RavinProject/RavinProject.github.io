@@ -1,8 +1,8 @@
-function loaderActions(){
-    console.log("configurando ações");
+function loaderActions(callback) {
+    
     // projects filters isotop
     $(".product-filters li").on('click', function () {
-        
+
         $(".product-filters li").removeClass("active");
         $(this).addClass("active");
 
@@ -11,32 +11,34 @@ function loaderActions(){
         $(".product-lists").isotope({
             filter: selector,
         });
-        
+
     });
+
+    if(callback) callback();
 }
 
 (function ($) {
     "use strict";
-    $(document).ready(function($){
-        
+    $(document).ready(function ($) {
+
         // testimonial sliders
         $(".testimonial-sliders").owlCarousel({
             items: 1,
             loop: true,
             autoplay: true,
-            responsive:{
-                0:{
-                    items:1,
-                    nav:false
+            responsive: {
+                0: {
+                    items: 1,
+                    nav: false
                 },
-                600:{
-                    items:1,
-                    nav:false
+                600: {
+                    items: 1,
+                    nav: false
                 },
-                1000:{
-                    items:1,
-                    nav:false,
-                    loop:true
+                1000: {
+                    items: 1,
+                    nav: false,
+                    loop: true
                 }
             }
         });
@@ -49,21 +51,21 @@ function loaderActions(){
             nav: true,
             dots: false,
             navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>'],
-            responsive:{
-                0:{
-                    items:1,
-                    nav:false,
-                    loop:true
+            responsive: {
+                0: {
+                    items: 1,
+                    nav: false,
+                    loop: true
                 },
-                600:{
-                    items:1,
-                    nav:true,
-                    loop:true
+                600: {
+                    items: 1,
+                    nav: true,
+                    loop: true
                 },
-                1000:{
-                    items:1,
-                    nav:true,
-                    loop:true
+                1000: {
+                    items: 1,
+                    nav: true,
+                    loop: true
                 }
             }
         });
@@ -74,31 +76,31 @@ function loaderActions(){
             loop: true,
             autoplay: true,
             margin: 30,
-            responsive:{
-                0:{
-                    items:1,
-                    nav:false
+            responsive: {
+                0: {
+                    items: 1,
+                    nav: false
                 },
-                600:{
-                    items:3,
-                    nav:false
+                600: {
+                    items: 3,
+                    nav: false
                 },
-                1000:{
-                    items:4,
-                    nav:false,
-                    loop:true
+                1000: {
+                    items: 4,
+                    nav: false,
+                    loop: true
                 }
             }
         });
 
         // count down
-        if($('.time-countdown').length){  
-            $('.time-countdown').each(function() {
-            var $this = $(this), finalDate = $(this).data('countdown');
-            $this.countdown(finalDate, function(event) {
-                var $this = $(this).html(event.strftime('' + '<div class="counter-column"><div class="inner"><span class="count">%D</span>Days</div></div> ' + '<div class="counter-column"><div class="inner"><span class="count">%H</span>Hours</div></div>  ' + '<div class="counter-column"><div class="inner"><span class="count">%M</span>Mins</div></div>  ' + '<div class="counter-column"><div class="inner"><span class="count">%S</span>Secs</div></div>'));
+        if ($('.time-countdown').length) {
+            $('.time-countdown').each(function () {
+                var $this = $(this), finalDate = $(this).data('countdown');
+                $this.countdown(finalDate, function (event) {
+                    var $this = $(this).html(event.strftime('' + '<div class="counter-column"><div class="inner"><span class="count">%D</span>Days</div></div> ' + '<div class="counter-column"><div class="inner"><span class="count">%H</span>Hours</div></div>  ' + '<div class="counter-column"><div class="inner"><span class="count">%M</span>Mins</div></div>  ' + '<div class="counter-column"><div class="inner"><span class="count">%S</span>Secs</div></div>'));
+                });
             });
-         });
         }
 
         // magnific popup
@@ -122,19 +124,19 @@ function loaderActions(){
         });
 
         // homepage slides animations
-        $(".homepage-slider").on("translate.owl.carousel", function(){
-            $(".hero-text-tablecell .subtitle").removeClass("animated fadeInUp").css({'opacity': '0'});
-            $(".hero-text-tablecell h1").removeClass("animated fadeInUp").css({'opacity': '0', 'animation-delay' : '0.3s'});
-            $(".hero-btns").removeClass("animated fadeInUp").css({'opacity': '0', 'animation-delay' : '0.5s'});
+        $(".homepage-slider").on("translate.owl.carousel", function () {
+            $(".hero-text-tablecell .subtitle").removeClass("animated fadeInUp").css({ 'opacity': '0' });
+            $(".hero-text-tablecell h1").removeClass("animated fadeInUp").css({ 'opacity': '0', 'animation-delay': '0.3s' });
+            $(".hero-btns").removeClass("animated fadeInUp").css({ 'opacity': '0', 'animation-delay': '0.5s' });
         });
 
-        $(".homepage-slider").on("translated.owl.carousel", function(){
-            $(".hero-text-tablecell .subtitle").addClass("animated fadeInUp").css({'opacity': '0'});
-            $(".hero-text-tablecell h1").addClass("animated fadeInUp").css({'opacity': '0', 'animation-delay' : '0.3s'});
-            $(".hero-btns").addClass("animated fadeInUp").css({'opacity': '0', 'animation-delay' : '0.5s'});
+        $(".homepage-slider").on("translated.owl.carousel", function () {
+            $(".hero-text-tablecell .subtitle").addClass("animated fadeInUp").css({ 'opacity': '0' });
+            $(".hero-text-tablecell h1").addClass("animated fadeInUp").css({ 'opacity': '0', 'animation-delay': '0.3s' });
+            $(".hero-btns").addClass("animated fadeInUp").css({ 'opacity': '0', 'animation-delay': '0.5s' });
         });
 
-       
+
 
         // stikcy js
         $("#sticker").sticky({
@@ -146,20 +148,20 @@ function loaderActions(){
             meanMenuContainer: '.mobile-menu',
             meanScreenWidth: "992"
         });
-        
-         // search form
-        $(".search-bar-icon").on("click", function(){
+
+        // search form
+        $(".search-bar-icon").on("click", function () {
             $(".search-area").addClass("search-active");
         });
 
-        $(".close-btn").on("click", function() {
+        $(".close-btn").on("click", function () {
             $(".search-area").removeClass("search-active");
         });
-    
+
     });
 
 
-    jQuery(window).on("load",function(){
+    jQuery(window).on("load", function () {
         jQuery(".loader").fadeOut(1000);
     });
 
@@ -170,39 +172,39 @@ function loaderActions(){
 /**
  * actionbar
  */
-$(function() {
+$(function () {
 
     'use strict';
-  
-    $('.js-menu-toggle').click(function(e) {
-  
+
+    $('.js-menu-toggle').click(function (e) {
+
         var $this = $(this);
-  
-        
-  
-        if ( $('body').hasClass('show-sidebar') ) {
+
+
+
+        if ($('body').hasClass('show-sidebar')) {
             $('body').removeClass('show-sidebar');
             $this.removeClass('active');
         } else {
-            $('body').addClass('show-sidebar');	
+            $('body').addClass('show-sidebar');
             $this.addClass('active');
         }
-  
+
         e.preventDefault();
-  
+
     });
-  
+
     // click outisde offcanvas
-      $(document).mouseup(function(e) {
-      var container = $(".sidebar");
-      if (!container.is(e.target) && container.has(e.target).length === 0) {
-        if ( $('body').hasClass('show-sidebar') ) {
-                  $('body').removeClass('show-sidebar');
-                  $('body').find('.js-menu-toggle').removeClass('active');
-              }
-      }
-      }); 
-  
-      
-  
-  });
+    $(document).mouseup(function (e) {
+        var container = $(".sidebar");
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            if ($('body').hasClass('show-sidebar')) {
+                $('body').removeClass('show-sidebar');
+                $('body').find('.js-menu-toggle').removeClass('active');
+            }
+        }
+    });
+
+
+
+});

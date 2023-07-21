@@ -1,4 +1,7 @@
-/** INIICIALIZADORES UNIVERSAIS*/
+/** 
+ * INICIALIZADORES GLOBAIS 
+ * para todas as páginas da aplicação
+ * */
 (function ($) {
     $(document).ready(function ($) {
         atualizarTotal();
@@ -33,14 +36,15 @@ function atualizarNumeroComanda() {
     }
 }
 
-// Caminho da imagem do modal precisa ser mudado mais tarde se bugar
+// COMPLETA O MODAL COM AS INFORMAÇÕES DO ITEM SELECIONADO
 function preencherModal(item) {
     var imageURL = "assets/img/products/" + item.imagem;
-    document.querySelector('#myModal .single-product-img img').src = imageURL;
-    document.querySelector('#myModal .single-product-content h3').innerText = item.nome;
-    document.querySelector('#myModal .single-product-content .single-product-pricing').innerText = 'R$' + item.valor;
-    document.querySelector('#myModal .single-product-content p:not(.single-product-pricing)').innerText = item.descritivo;
-    document.querySelector('#myModal #modal-categoria').innerText = item.categoria;
+    document.querySelector('#modalProdutoSelecionado .single-product-img img').src = imageURL;
+    document.querySelector('#modalProdutoSelecionado .single-product-content h3').innerText = item.nome;
+    document.querySelector('#modalProdutoSelecionado .single-product-content .single-product-pricing').innerText = 'R$' + item.valor;
+    document.querySelector('#modalProdutoSelecionado #quantidade').value = 1;
+    document.querySelector('#modalProdutoSelecionado .single-product-content p:not(.single-product-pricing)').innerText = item.descritivo;
+    document.querySelector('#modalProdutoSelecionado #modal-categoria').innerText = item.categoria;
 }
 
 var comanda = {
@@ -65,21 +69,19 @@ localStorage.setItem('comanda', JSON.stringify(comanda));
 /**
  * CARREGA OS ITENS PARA SELEÇÃO
  */
-function carregarItens() {
-    var box_itens = document.getElementsByClassName('product-lists')[0];
+function carregarItens(callback) {
+    var box_itens = document.querySelector('.product-lists');
+    var ul_categorias = document.querySelector('.product-filters ul');
     fetch(`http://localhost:8080/`)
         .then(response => response.json())
         .then(data => {
-            if (data.erro) {
-                console.log('deu ruim!');
-                return;
-            }
             let html = "";
             for (let categoria in data) {
                 if (data.hasOwnProperty(categoria)) {
                     data[categoria].forEach(item => {
                         html += getBoxItem(categoria, item);
                     });
+                    adicionaFiltroCategoria(categoria);
                 }
             }
             box_itens.innerHTML = html;
@@ -89,19 +91,40 @@ function carregarItens() {
                 // isotop inner
                 $(".product-lists").isotope();
             }, 500);
+            //
+            if(callback) callback();
         })
         .catch(error => console.log(error));
 
+    function adicionaFiltroCategoria(categoria){
+        const novoItem = document.createElement('li');
+        novoItem.textContent = categoria;
+        novoItem.setAttribute('data-filter', `.${removerAcentosEspeciais(categoria)}`);
+        ul_categorias.appendChild(novoItem);
+    }
+
     function getBoxItem(categoria, item) {
-        return `<div class="col-lg-4 col-md-6 text-center ${categoria}">
+        var imageURL = "assets/img/products/" + item.imagem;
+        return `<div class="product-item col-lg-4 col-md-6 text-center ${removerAcentosEspeciais(categoria)}" >
         <div class="single-product-item">
             <div class="product-image">
-                <a href="#modalProdutoSelecionado" data-toggle="modal"><img src="assets/img/products/${item.imagem}" alt=""></a>
+                <img src="${imageURL}" alt="${item.nome}">
             </div>
             <h3>${item.nome}</h3>
-            <p class="product-price"><span>Un</span> R$ ${item.valor} </p>
-            <a href="#" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
+            <p class="product-description">${item.descritivo}</p>
+            <p class="product-price"><span>Unidade</span> R$ ${item.valor} </p>
+            <a href="#" class="cart-btn" data-item='${encodeURI(JSON.stringify(item))}'><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
         </div>
         </div>`;
     }
 }
+
+function removerAcentosEspeciais(str) {
+    // Substitui os caracteres acentuados por seus equivalentes sem acento
+    str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    // Substitui os caracteres especiais e o 'ç' por ''
+    str = str.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
+    
+    return str;
+  }

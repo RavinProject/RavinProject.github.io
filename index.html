@@ -30,7 +30,7 @@
 	<link rel="stylesheet" href="assets/css/main.css">
 	<!-- responsive -->
 	<link rel="stylesheet" href="assets/css/responsive.css">
-	<!-- menu colapsável -->
+	<!-- Menu lateral colapsável -->
 	<link rel="stylesheet" href="assets/fonts/icomoon/style.css">
 	<link rel="stylesheet" href="assets/css/style.css">
 	<!-- personalizações nesta página somente -->
@@ -44,9 +44,16 @@
 			max-width: fit-content;
 			min-width: 60vw;
 		}
+		.product-item .product-description{
+			height: 102px;
+			text-align: justify;
+			margin: 0 10px 0 10px;
+			font-weight: normal;
+		}
 	</style>
-  
+
 </head>
+
 <body>
 	<!--PreLoader-->
 	<div class="loader">
@@ -61,27 +68,27 @@
 		<div class="toggle">
 			<a href="#" class="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
 				<span></span>
-				</a>
+			</a>
 		</div>
 		<div class="side-inner">
 
-        <div class="logo-wrap">
-			<div class="logo">
+			<div class="logo-wrap">
+				<div class="logo">
+				</div>
+				<span class="logo-text">Ravin</span>
 			</div>
-			<span class="logo-text">Ravin</span>
-			</div>
-			
+
 			<div class="nav-menu">
-			<ul>
+				<ul>
 					<li class="active"><a href="index.html" class="d-flex align-items-center"><span
 								class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
 					<li><a href="cart.html" class="d-flex align-items-center"><span
 								class="wrap-icon icon-shopping-cart mr-3"></span><span
 								class="menu-text">Comanda</span></a></li>
-			</ul>
+				</ul>
 			</div>
 		</div>
-    </aside>
+	</aside>
 	<!--PreLoader-->
 	<div class="loader">
 		<div class="loader-inner">
@@ -89,7 +96,7 @@
 		</div>
 	</div>
 	<!--PreLoader Ends-->
-	
+
 	<!-- header -->
 	<div class="top-header-area" id="sticker">
 		<div class="container">
@@ -113,7 +120,8 @@
 								</li>
 								<li>
 									<div class="header-icons">
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+										<a class="shopping-cart" href="cart.html"><i
+												class="fas fa-shopping-cart"></i></a>
 									</div>
 								</li>
 							</ul>
@@ -145,7 +153,7 @@
 		</div>
 	</div>
 	<!-- end search arewa -->
-	
+
 	<!-- breadcrumb-section -->
 	<div class="breadcrumb-section breadcrumb-bg">
 		<div class="container">
@@ -160,6 +168,7 @@
 		</div>
 	</div>
 	<!-- end breadcrumb section -->
+	<!-- MODAL PRODUTO SELECIONADO -->
 	<div class="modal fade" id="modalProdutoSelecionado">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -178,10 +187,9 @@
 									<p class="single-product-pricing"><span>Unidade</span> R$ 00</p>
 									<p> </p>
 									<div class="single-product-form">
-										<form action="index.html">
-											<input type="number" placeholder="0">
-										</form>
-										<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho</a>
+										<input id="quantidade" type="number" placeholder="0">
+										<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i>
+											Adicionar ao Carrinho</a>
 										<p><strong>Categorias: </strong><span id="modal-categoria">Categoria</span></p>
 									</div>
 								</div>
@@ -193,26 +201,22 @@
 			</div>
 		</div>
 	</div>
-
+	<!-- FIM MODAL -->
 	<!-- products -->
 	<div class="product-section mt-100 mb-150">
 		<div class="container">
 
 			<div class="row">
-                <div class="col-md-12">
-                    <div class="product-filters">
-                        <ul>
-                            <li class="active" data-filter="*">Todos</li>
-                            <li data-filter=".bebida">Bebidas</li>
-                            <li data-filter=".refeicao">Refeições</li>
-                            <li data-filter=".sobremesa">Sobremesas</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-			<div class="row product-lists">				
+				<div class="col-md-12">
+					<div class="product-filters">
+						<ul>
+							<li class="active" data-filter="*">Todos</li>
+						</ul>
+					</div>
+				</div>
 			</div>
+
+			<div class="row product-lists"></div>
 			<!-- PAGINAÇÃO -->
 			<!-- <div class="row">
 				<div class="col-lg-12 text-center">
@@ -239,9 +243,9 @@
 	</div>
 
 	<!-- fim footer invisível -->
-	
-    <!-- jquery -->
-	<script src="assets/js/jquery-1.11.3.min.js"></script>	
+
+	<!-- jquery -->
+	<script src="assets/js/jquery-1.11.3.min.js"></script>
 	<!-- bootstrap -->
 	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
 	<!-- count down -->
@@ -262,19 +266,25 @@
 	<script src="assets/js/templateControl.js"></script>
 	<!-- Ravin APP Scripts -->
 	<script src="assets/js/ravin.js"></script>
-    <script>
+	<script>
 		// SCRIPTS ESPECÍFICOS PARA ESTA PÁGINA
-		 $(document).ready(function ($) {
-        carregarItens();
-    });
-	// Adiciona evento de clique no Modal
-
-	document.querySelectorAll('.product-item').forEach(itemElement => {
-        itemElement.addEventListener('click', function() {
-            var item = JSON.parse(this.getAttribute('data-item'));
-            preencherModal(item);
-            $('#myModal').modal('show'); // Abre o modal com jQuery
-        });
-    </script>
+		$(document).ready(function ($) {
+			//chama a função que carrega os itens e passa por callback a função que irá configurar o evento do click
+			carregarItens(function () {
+				// Após o carregamento completo dos itens
+				// adiciona evento de clique para abertura do Modal
+				document.querySelectorAll('.product-item .cart-btn').forEach(itemElement => {
+					itemElement.addEventListener('click', function () {
+						event.preventDefault();
+						var item = JSON.parse(decodeURI(this.getAttribute('data-item')));
+						console.log(item);
+						preencherModal(item);
+						$('#modalProdutoSelecionado').modal('show'); // Abre o modal com jQuery
+					});
+				});
+			});
+		});
+	</script>
 </body>
+
 </html>
