@@ -69,10 +69,10 @@ localStorage.setItem('comanda', JSON.stringify(comanda));
 /**
  * CARREGA OS ITENS PARA SELEÇÃO
  */
-
-function carregarItens() {
-    var box_itens = document.getElementsByClassName('product-lists')[0];
-    fetch(`https://api.npoint.io/c442d6ba06c605014033`)
+function carregarItens(callback) {
+    var box_itens = document.querySelector('.product-lists');
+    var ul_categorias = document.querySelector('.product-filters ul');
+    fetch(`https://api.npoint.io/c442d6ba06c605014033/`)
         .then(response => response.json())
         .then(data => {
             let html = "";
