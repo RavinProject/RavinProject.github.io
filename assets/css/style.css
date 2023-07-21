@@ -40,9 +40,7 @@ body {
     overflow: hidden; }
     body.show-sidebar:before {
       opacity: 1;
-      visibility: visible; 
-      height: 1000vh;
-    }
+      visibility: visible; }
 
 .site-section {
   padding: 7rem 0; }
