@@ -2,13 +2,16 @@
  * DECLARAÇÃO DAS VARIÁVEIS E OBJETOS GLOBAIS
  */
 var itensList = null; //itens recuperados da API
-//
+
+/**
+ * Objeto javascript para controlar toda a lógica local referente aos dados de uma comanda
+ */
 const objetoComanda = (function(){
     // EXTRUTURA DOS DADOS DA COMANDA E SEUS ITENS
     var comanda = {
         numero: 0,
         itens: [
-            { // item apenas para demonstração, é sobrescrito ou zerado logo em seguida
+            { // item importante apenas para demonstração da estrutura de dados, é sobrescrito ou zerado logo em seguida
                 id: 0,
                 item: {
                     identificador: "005",
@@ -37,7 +40,7 @@ const objetoComanda = (function(){
         }
     }
 
-    // funções privadas do objeto
+    // funções privadas do objeto (não podem ser chamadas globalmente)
     function atualizaStorage(comanda){
         localStorage.setItem('comanda', JSON.stringify(comanda));
     }
@@ -54,7 +57,7 @@ const objetoComanda = (function(){
         return maiorId + 1;
     }
 
-    // retorna a parte pública do objeto
+    // retorna a parte pública do objeto a ser utilizada globalmente
     return {
         
         adicionarItem: function(item, quantidade){
@@ -95,7 +98,7 @@ const objetoComanda = (function(){
         }
     };     
 })();
-
+// FIM OBJETO COMANDA
 
 /** 
  * INICIALIZADORES GLOBAIS 
