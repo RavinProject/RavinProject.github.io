@@ -1,4 +1,9 @@
 <?php
+/**
+ * Endereço da API: https://api.npoint.io/c442d6ba06c605014033/
+ * 
+ * Alteração do JSON: https://www.npoint.io/docs/c442d6ba06c605014033
+ */
 $jsonData = '{
   "Refeições": [
     {
