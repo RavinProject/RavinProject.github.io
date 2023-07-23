@@ -188,7 +188,7 @@
 									<p> </p>
 									<div class="single-product-form">
 										<input id="quantidade" type="number" placeholder="0" min="1">
-										<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i>
+										<a href="#" class="btnAdicionarItemComanda cart-btn"><i class="fas fa-shopping-cart"></i>
 											Adicionar a Comanda</a>
 										<p><strong>Categorias: </strong><span id="modal-categoria">Categoria</span></p>
 									</div>
@@ -274,10 +274,9 @@
 				// Após o carregamento completo dos itens
 				// adiciona evento de clique para abertura do Modal
 				document.querySelectorAll('.product-item .cart-btn').forEach(itemElement => {
-					itemElement.addEventListener('click', function () {
+					itemElement.addEventListener('click', function (event) {
 						event.preventDefault();
 						var item = JSON.parse(decodeURI(this.getAttribute('data-item')));
-						console.log(item);
 						preencherModal(item);
 						$('#modalProdutoSelecionado').modal('show'); // Abre o modal com jQuery
 					});

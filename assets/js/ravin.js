@@ -1,3 +1,102 @@
+/**
+ * DECLARAÇÃO DAS VARIÁVEIS E OBJETOS GLOBAIS
+ */
+var itensList = null; //itens recuperados da API
+//
+const objetoComanda = (function(){
+    // EXTRUTURA DOS DADOS DA COMANDA E SEUS ITENS
+    var comanda = {
+        numero: 0,
+        itens: [
+            { // item apenas para demonstração, é sobrescrito ou zerado logo em seguida
+                id: 0,
+                item: {
+                    identificador: "005",
+                    categoria: "Água",
+                    nome: "Água Mineral",
+                    descritivo: "Água mineral natural, sem gás.",
+                    valor: 2.00,
+                    imagem: "agua500.jpg"
+                },
+                quantidade: 0
+            }
+        ],
+        total: 0
+    }
+    
+    //inicializa com os valores armazenados no storage (se houver) ao carregar a aplicação
+    data = JSON.parse(localStorage.getItem('comanda'));
+    if(data !== null){
+        comanda = data;
+    }else{
+        //comanda vazia se não houver dados anteriores
+        comanda = {
+            numero: 0,
+            itens: [],
+            total: 0
+        }
+    }
+
+    // funções privadas do objeto
+    function atualizaStorage(comanda){
+        localStorage.setItem('comanda', JSON.stringify(comanda));
+    }
+    function recuperaComandaStorage(){
+        return JSON.parse(localStorage.getItem('comanda'));
+    }
+    function getNextIdItem(){
+        let maiorId = 0;
+        for (const item of comanda.itens) {
+            if (item.id > maiorId) {
+                maiorId = item.id;
+            }
+        }
+        return maiorId + 1;
+    }
+
+    // retorna a parte pública do objeto
+    return {
+        
+        adicionarItem: function(item, quantidade){
+            comanda.itens.push({
+                id: getNextIdItem(),
+                item: item,
+                quantidade: quantidade
+            });
+            comanda.total = comanda.total + (quantidade * item.valor);
+            atualizaStorage(comanda);
+        },
+
+        removerItem: function(idItem) {
+            const index = comanda.itens.findIndex(item => item.id === idItem);
+            if (index > -1) {
+                let item = comanda.itens[index].item;
+                comanda.total = comanda.total - (comanda.itens[index].quantidade * item.valor);
+                comanda.itens.splice(index, 1);
+                atualizaStorage(comanda);
+            }
+        },
+
+        getTotal: function() {
+            return comanda.total;
+        },
+        
+        setNumero: function(numero) {
+            comanda.numero = numero;
+            atualizaStorage(comanda);
+        },
+
+        getNumero : function(){
+            return comanda.numero;
+        },
+
+        printComanda: function(){
+            console.log(recuperaComandaStorage());
+        }
+    };     
+})();
+
+
 /** 
  * INICIALIZADORES GLOBAIS 
  * para todas as páginas da aplicação
@@ -10,30 +109,41 @@
 }(jQuery));
 /** FIM */
 
-function atualizarTotal() {
-    // Recuperar a comanda do localStorage
-    var comanda = JSON.parse(localStorage.getItem('comanda'));
-    var total = 0;
+// ADICIONA UM ITEM A COMANDA A PARTIR DO IDENTIFICADOR
+function adicionarItemComanda(identificador){
+    var quantidade = document.querySelector('#modalProdutoSelecionado #quantidade').value;
+    var item = buscaItemPeloIdentificador(identificador);
+    objetoComanda.adicionarItem(item, quantidade);
+    atualizarTotal();
+}
 
-    if(comanda !== null && comanda.itens !== null) {
-        // Calcular o total
-        for(var i = 0; i < comanda.itens.length; i++) {
-            total += comanda.itens[i].total;
+// REMOVE UM ITEM NA COMANDA A PARTIR DO ID EXISTENTE NA LISTA DE ITENS DA COMANDA
+function removerItemComanda(id){
+    objetoComanda.removerItem(id);
+    atualizarTotal();
+}
+
+
+// RETORNA UM ITEM A PARTIR DO IDENTIFICADOR
+function buscaItemPeloIdentificador(identificador){
+    for (const categoria in itensList) {
+        const itensCategoria = itensList[categoria];
+        const itemEncontrado = itensCategoria.find(item => item.identificador === identificador);
+        if (itemEncontrado) {
+          return itemEncontrado;
         }
+      }
+      // Se o item não for encontrado, retorna null ou outra indicação de que não foi encontrado
+      return null;
     }
 
+function atualizarTotal() {
     // Atualizar o total na interface do usuário
-    document.getElementById("totalGasto").innerText = total.toFixed(2);
+    document.getElementById("totalGasto").innerText = objetoComanda.getTotal();
 }
 
 function atualizarNumeroComanda() {
-    // Recuperar a comanda do localStorage
-    var comanda = JSON.parse(localStorage.getItem('comanda'));
-
-    if(comanda !== null) {
-        // Atualizar o número da comanda na interface do usuário
-        document.getElementById("numero-comanda").innerText = comanda.numero;
-    }
+    document.getElementById("numero-comanda").innerText = objetoComanda.getNumero();
 }
 
 // COMPLETA O MODAL COM AS INFORMAÇÕES DO ITEM SELECIONADO
@@ -45,26 +155,12 @@ function preencherModal(item) {
     document.querySelector('#modalProdutoSelecionado #quantidade').value = 1;
     document.querySelector('#modalProdutoSelecionado .single-product-content p:not(.single-product-pricing)').innerText = item.descritivo;
     document.querySelector('#modalProdutoSelecionado #modal-categoria').innerText = item.categoria;
+    //adiciona o evento para o botão de confirmação 
+    var btnAdicionarItemComanda = document.querySelector('#modalProdutoSelecionado .btnAdicionarItemComanda');
+    btnAdicionarItemComanda.setAttribute('onclick', `adicionarItemComanda('${item.identificador}')`);
 }
 
-var comanda = {
-    "numero": 12222,
-    "itens": [
-        {
-            "item": { "nome": "Item 1", "valor": 10.0 },
-            "quantidade": 2,
-            "total": 2323230.0
-        },
-        {
-            "item": { "nome": "Item 2", "valor": 15.0 },
-            "quantidade": 3,
-            "total": 45.0
-        }
-    ],
-    "total": 65.0
-};
 
-localStorage.setItem('comanda', JSON.stringify(comanda));
 
 /**
  * CARREGA OS ITENS PARA SELEÇÃO
@@ -75,6 +171,7 @@ function carregarItens(callback) {
     fetch(`https://api.npoint.io/c442d6ba06c605014033/`)
         .then(response => response.json())
         .then(data => {
+            itensList = data;
             let html = "";
             for (let categoria in data) {
                 if (data.hasOwnProperty(categoria)) {
