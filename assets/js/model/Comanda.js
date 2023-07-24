@@ -1,6 +1,6 @@
 class Comanda {
     constructor() {
-        // EXTRUTURA DOS DADOS DA COMANDA E SEUS ITENS
+        // ESTRUTURA DOS DADOS DA COMANDA E SEUS ITENS
         this.comanda = {
             numero: 0,
             itens: [
@@ -34,15 +34,21 @@ class Comanda {
         }
     }
 
-    // Função para encontrar o maior ID na lista de itens da comanda
+    /**
+     * Encontra o maior ID na lista de itens da comanda.
+     *
+     * Esta função primeiro cria um novo array que contém apenas os IDs 
+     * dos itens da comanda usando o método 'map'. Em seguida, usa a 
+     * função 'Math.max' para encontrar o maior ID no novo array.
+     * O operador '...' (spread) é usado para passar os elementos do 
+     * array de IDs como argumentos individuais para 'Math.max'.
+     * O '0' é incluído para lidar com o caso em que o array está vazio.
+     *
+     * @returns {number} O maior ID entre os itens da comanda, ou '0' 
+     *                   se a lista de itens estiver vazia.
+     */
     encontrarMaiorId() {
-        let maiorId = 0;
-        for (const item of this.comanda.itens) {
-            if (item.id > maiorId) {
-                maiorId = item.id;
-            }
-        }
-        return maiorId;
+        return Math.max(0, ...this.comanda.itens.map(item => item.id));
     }
 
     // Função para gerar o próximo ID baseado no maior ID existente na lista de itens
@@ -85,7 +91,7 @@ class Comanda {
 
     // Função para obter o total da comanda
     getTotal() {
-        return this.comanda.total;
+        return this.comanda.total.toFixed(2); // To fixed para por duas casas decimais
     }
 
     // Função para setar o número da comanda
