@@ -21,7 +21,7 @@ class Comanda {
         };
 
         //inicializa com os valores armazenados no storage (se houver) ao carregar a aplicação
-        const data = JSON.parse(localStorage.getItem('comanda'));
+        const data = this.recuperaComandaStorage();
         if (data !== null) {
             this.comanda = data;
         } else {
