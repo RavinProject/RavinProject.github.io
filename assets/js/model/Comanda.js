@@ -21,7 +21,7 @@ class Comanda {
         };
 
         //inicializa com os valores armazenados no storage (se houver) ao carregar a aplicação
-        const data = JSON.parse(localStorage.getItem('comanda'));
+        const data = this.recuperaComandaStorage();
         if (data !== null) {
             this.comanda = data;
         } else {
@@ -64,7 +64,7 @@ class Comanda {
             item: item,
             quantidade: quantidade
         });
-        this.comanda.total += quantidade * item.valor;
+        this.comanda.total += quantidade * item.valor; // TODO arrumar cálculo da soma do total da comanda
         this.atualizaStorage(this.comanda);
     }
 
@@ -73,7 +73,7 @@ class Comanda {
         const index = this.comanda.itens.findIndex(item => item.id === idItem);
         if (index > -1) {
             const item = this.comanda.itens[index].item;
-            this.comanda.total -= this.comanda.itens[index].quantidade * item.valor;
+            this.comanda.total -= this.comanda.itens[index].quantidade * item.valor; // TODO arrumar cálculo da subtração do total da comanda
             this.comanda.itens.splice(index, 1);
             this.atualizaStorage(this.comanda);
         }
