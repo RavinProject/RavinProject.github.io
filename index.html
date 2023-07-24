@@ -44,7 +44,8 @@
 			max-width: fit-content;
 			min-width: 60vw;
 		}
-		.product-item .product-description{
+
+		.product-item .product-description {
 			height: 102px;
 			text-align: justify;
 			margin: 0 10px 0 10px;
@@ -188,7 +189,8 @@
 									<p> </p>
 									<div class="single-product-form">
 										<input id="quantidade" type="number" placeholder="0" min="1">
-										<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i>
+										<a href="#" class="btnAdicionarItemComanda cart-btn"><i
+												class="fas fa-shopping-cart"></i>
 											Adicionar a Comanda</a>
 										<p><strong>Categorias: </strong><span id="modal-categoria">Categoria</span></p>
 									</div>
@@ -262,8 +264,12 @@
 	<script src="assets/js/jquery.meanmenu.min.js"></script>
 	<!-- sticker js -->
 	<script src="assets/js/sticker.js"></script>
-	<!-- main js -->
+	<!-- Template Control JS -->
 	<script src="assets/js/templateControl.js"></script>
+	<!-- Objeto Comanda -->
+	<script src="assets/js/model/Comanda.js"></script>
+	<!-- Objeto Pedido -->
+	<script src="assets/js/model/Pedido.js"></script>
 	<!-- Ravin APP Scripts -->
 	<script src="assets/js/ravin.js"></script>
 	<script>
@@ -274,10 +280,9 @@
 				// Após o carregamento completo dos itens
 				// adiciona evento de clique para abertura do Modal
 				document.querySelectorAll('.product-item .cart-btn').forEach(itemElement => {
-					itemElement.addEventListener('click', function () {
+					itemElement.addEventListener('click', function (event) {
 						event.preventDefault();
 						var item = JSON.parse(decodeURI(this.getAttribute('data-item')));
-						console.log(item);
 						preencherModal(item);
 						$('#modalProdutoSelecionado').modal('show'); // Abre o modal com jQuery
 					});

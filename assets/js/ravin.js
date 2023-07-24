@@ -1,3 +1,9 @@
+/**
+ * DECLARAÇÃO DAS VARIÁVEIS E OBJETOS GLOBAIS
+ */
+var itensList = null; //itens recuperados da API
+const objetoComanda = new Comanda(); // Objeto javascript para controlar toda a lógica local referente aos dados de uma comanda
+
 /** 
  * INICIALIZADORES GLOBAIS 
  * para todas as páginas da aplicação
@@ -10,30 +16,42 @@
 }(jQuery));
 /** FIM */
 
-function atualizarTotal() {
-    // Recuperar a comanda do localStorage
-    var comanda = JSON.parse(localStorage.getItem('comanda'));
-    var total = 0;
+// ADICIONA UM ITEM A COMANDA A PARTIR DO IDENTIFICADOR
+function adicionarItemComanda(identificador) {
+    var quantidade = document.querySelector('#modalProdutoSelecionado #quantidade').value;
+    var item = buscaItemPeloIdentificador(identificador);
+    objetoComanda.adicionarItem(item, quantidade);
+    atualizarTotal();
+    alert("Item incluído a comanda!");
+    $('#modalProdutoSelecionado').modal('hide');
+}
 
-    if(comanda !== null && comanda.itens !== null) {
-        // Calcular o total
-        for(var i = 0; i < comanda.itens.length; i++) {
-            total += comanda.itens[i].total;
+// REMOVE UM ITEM NA COMANDA A PARTIR DO ID EXISTENTE NA LISTA DE ITENS DA COMANDA
+function removerItemComanda(id) {
+    objetoComanda.removerItem(id);
+    atualizarTotal();
+}
+
+// RETORNA UM ITEM A PARTIR DO IDENTIFICADOR
+function buscaItemPeloIdentificador(identificador) {
+    for (const categoria in itensList) {
+        const itensCategoria = itensList[categoria];
+        const itemEncontrado = itensCategoria.find(item => item.identificador === identificador);
+        if (itemEncontrado) {
+            return itemEncontrado;
         }
     }
+    // Se o item não for encontrado, retorna null ou outra indicação de que não foi encontrado
+    return null;
+}
 
+function atualizarTotal() {
     // Atualizar o total na interface do usuário
-    document.getElementById("totalGasto").innerText = total.toFixed(2);
+    document.getElementById("totalGasto").innerText = objetoComanda.getTotal();
 }
 
 function atualizarNumeroComanda() {
-    // Recuperar a comanda do localStorage
-    var comanda = JSON.parse(localStorage.getItem('comanda'));
-
-    if(comanda !== null) {
-        // Atualizar o número da comanda na interface do usuário
-        document.getElementById("numero-comanda").innerText = comanda.numero;
-    }
+    document.getElementById("numero-comanda").innerText = objetoComanda.getNumero();
 }
 
 // COMPLETA O MODAL COM AS INFORMAÇÕES DO ITEM SELECIONADO
@@ -41,30 +59,14 @@ function preencherModal(item) {
     var imageURL = "assets/img/products/" + item.imagem;
     document.querySelector('#modalProdutoSelecionado .single-product-img img').src = imageURL;
     document.querySelector('#modalProdutoSelecionado .single-product-content h3').innerText = item.nome;
-    document.querySelector('#modalProdutoSelecionado .single-product-content .single-product-pricing').innerText = 'R$' + item.valor;
+    document.querySelector('#modalProdutoSelecionado .single-product-content .single-product-pricing').innerText = 'R$' + item.valor.toFixed(2);
     document.querySelector('#modalProdutoSelecionado #quantidade').value = 1;
     document.querySelector('#modalProdutoSelecionado .single-product-content p:not(.single-product-pricing)').innerText = item.descritivo;
     document.querySelector('#modalProdutoSelecionado #modal-categoria').innerText = item.categoria;
+    //adiciona o evento para o botão de confirmação 
+    var btnAdicionarItemComanda = document.querySelector('#modalProdutoSelecionado .btnAdicionarItemComanda');
+    btnAdicionarItemComanda.setAttribute('onclick', `adicionarItemComanda('${item.identificador}')`);
 }
-
-var comanda = {
-    "numero": 12222,
-    "itens": [
-        {
-            "item": { "nome": "Item 1", "valor": 10.0 },
-            "quantidade": 2,
-            "total": 2323230.0
-        },
-        {
-            "item": { "nome": "Item 2", "valor": 15.0 },
-            "quantidade": 3,
-            "total": 45.0
-        }
-    ],
-    "total": 65.0
-};
-
-localStorage.setItem('comanda', JSON.stringify(comanda));
 
 /**
  * CARREGA OS ITENS PARA SELEÇÃO
@@ -75,6 +77,7 @@ function carregarItens(callback) {
     fetch(`https://api.npoint.io/c442d6ba06c605014033/`)
         .then(response => response.json())
         .then(data => {
+            itensList = data;
             let html = "";
             for (let categoria in data) {
                 if (data.hasOwnProperty(categoria)) {
@@ -92,11 +95,11 @@ function carregarItens(callback) {
                 $(".product-lists").isotope();
             }, 500);
             //
-            if(callback) callback();
+            if (callback) callback();
         })
         .catch(error => console.log(error));
 
-    function adicionaFiltroCategoria(categoria){
+    function adicionaFiltroCategoria(categoria) {
         const novoItem = document.createElement('li');
         novoItem.textContent = categoria;
         novoItem.setAttribute('data-filter', `.${removerAcentosEspeciais(categoria)}`);
@@ -112,7 +115,7 @@ function carregarItens(callback) {
             </div>
             <h3>${item.nome}</h3>
             <p class="product-description">${item.descritivo}</p>
-            <p class="product-price"><span>Unidade</span> R$ ${item.valor} </p>
+            <p class="product-price"><span>Unidade</span> R$ ${item.valor.toFixed(2)} </p>
             <a href="#" class="cart-btn" data-item='${encodeURI(JSON.stringify(item))}'><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
         </div>
         </div>`;
@@ -122,9 +125,9 @@ function carregarItens(callback) {
 function removerAcentosEspeciais(str) {
     // Substitui os caracteres acentuados por seus equivalentes sem acento
     str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    
+
     // Substitui os caracteres especiais e o 'ç' por ''
     str = str.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
-    
+
     return str;
-  }
+}
