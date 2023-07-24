@@ -59,7 +59,7 @@ function preencherModal(item) {
     var imageURL = "assets/img/products/" + item.imagem;
     document.querySelector('#modalProdutoSelecionado .single-product-img img').src = imageURL;
     document.querySelector('#modalProdutoSelecionado .single-product-content h3').innerText = item.nome;
-    document.querySelector('#modalProdutoSelecionado .single-product-content .single-product-pricing').innerText = 'R$' + item.valor;
+    document.querySelector('#modalProdutoSelecionado .single-product-content .single-product-pricing').innerText = 'R$' + item.valor.toFixed(2);
     document.querySelector('#modalProdutoSelecionado #quantidade').value = 1;
     document.querySelector('#modalProdutoSelecionado .single-product-content p:not(.single-product-pricing)').innerText = item.descritivo;
     document.querySelector('#modalProdutoSelecionado #modal-categoria').innerText = item.categoria;
@@ -115,7 +115,7 @@ function carregarItens(callback) {
             </div>
             <h3>${item.nome}</h3>
             <p class="product-description">${item.descritivo}</p>
-            <p class="product-price"><span>Unidade</span> R$ ${item.valor} </p>
+            <p class="product-price"><span>Unidade</span> R$ ${item.valor.toFixed(2)} </p>
             <a href="#" class="cart-btn" data-item='${encodeURI(JSON.stringify(item))}'><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
         </div>
         </div>`;
