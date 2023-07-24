@@ -6,98 +6,8 @@ var itensList = null; //itens recuperados da API
 /**
  * Objeto javascript para controlar toda a lógica local referente aos dados de uma comanda
  */
-const objetoComanda = (function(){
-    // EXTRUTURA DOS DADOS DA COMANDA E SEUS ITENS
-    var comanda = {
-        numero: 0,
-        itens: [
-            { // item importante apenas para demonstração da estrutura de dados, é sobrescrito ou zerado logo em seguida
-                id: 0,
-                item: {
-                    identificador: "005",
-                    categoria: "Água",
-                    nome: "Água Mineral",
-                    descritivo: "Água mineral natural, sem gás.",
-                    valor: 2.00,
-                    imagem: "agua500.jpg"
-                },
-                quantidade: 0
-            }
-        ],
-        total: 0
-    }
-    
-    //inicializa com os valores armazenados no storage (se houver) ao carregar a aplicação
-    data = JSON.parse(localStorage.getItem('comanda'));
-    if(data !== null){
-        comanda = data;
-    }else{
-        //comanda vazia se não houver dados anteriores
-        comanda = {
-            numero: 0,
-            itens: [],
-            total: 0
-        }
-    }
+const objetoComanda = new Comanda();
 
-    // funções privadas do objeto (não podem ser chamadas globalmente)
-    function atualizaStorage(comanda){
-        localStorage.setItem('comanda', JSON.stringify(comanda));
-    }
-    function recuperaComandaStorage(){
-        return JSON.parse(localStorage.getItem('comanda'));
-    }
-    function getNextIdItem(){
-        let maiorId = 0;
-        for (const item of comanda.itens) {
-            if (item.id > maiorId) {
-                maiorId = item.id;
-            }
-        }
-        return maiorId + 1;
-    }
-
-    // retorna a parte pública do objeto a ser utilizada globalmente
-    return {
-        
-        adicionarItem: function(item, quantidade){
-            comanda.itens.push({
-                id: getNextIdItem(),
-                item: item,
-                quantidade: quantidade
-            });
-            comanda.total = comanda.total + (quantidade * item.valor);
-            atualizaStorage(comanda);
-        },
-
-        removerItem: function(idItem) {
-            const index = comanda.itens.findIndex(item => item.id === idItem);
-            if (index > -1) {
-                let item = comanda.itens[index].item;
-                comanda.total = comanda.total - (comanda.itens[index].quantidade * item.valor);
-                comanda.itens.splice(index, 1);
-                atualizaStorage(comanda);
-            }
-        },
-
-        getTotal: function() {
-            return comanda.total;
-        },
-        
-        setNumero: function(numero) {
-            comanda.numero = numero;
-            atualizaStorage(comanda);
-        },
-
-        getNumero : function(){
-            return comanda.numero;
-        },
-
-        printComanda: function(){
-            console.log(recuperaComandaStorage());
-        }
-    };     
-})();
 // FIM OBJETO COMANDA
 
 /** 
@@ -118,6 +28,8 @@ function adicionarItemComanda(identificador){
     var item = buscaItemPeloIdentificador(identificador);
     objetoComanda.adicionarItem(item, quantidade);
     atualizarTotal();
+    alert("Item incluído a comanda!");
+    $('#modalProdutoSelecionado').modal('hide'); 
 }
 
 // REMOVE UM ITEM NA COMANDA A PARTIR DO ID EXISTENTE NA LISTA DE ITENS DA COMANDA
