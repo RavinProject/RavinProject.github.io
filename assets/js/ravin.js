@@ -2,13 +2,7 @@
  * DECLARAÇÃO DAS VARIÁVEIS E OBJETOS GLOBAIS
  */
 var itensList = null; //itens recuperados da API
-
-/**
- * Objeto javascript para controlar toda a lógica local referente aos dados de uma comanda
- */
-const objetoComanda = new Comanda();
-
-// FIM OBJETO COMANDA
+const objetoComanda = new Comanda(); // Objeto javascript para controlar toda a lógica local referente aos dados de uma comanda
 
 /** 
  * INICIALIZADORES GLOBAIS 
@@ -23,34 +17,33 @@ const objetoComanda = new Comanda();
 /** FIM */
 
 // ADICIONA UM ITEM A COMANDA A PARTIR DO IDENTIFICADOR
-function adicionarItemComanda(identificador){
+function adicionarItemComanda(identificador) {
     var quantidade = document.querySelector('#modalProdutoSelecionado #quantidade').value;
     var item = buscaItemPeloIdentificador(identificador);
     objetoComanda.adicionarItem(item, quantidade);
     atualizarTotal();
     alert("Item incluído a comanda!");
-    $('#modalProdutoSelecionado').modal('hide'); 
+    $('#modalProdutoSelecionado').modal('hide');
 }
 
 // REMOVE UM ITEM NA COMANDA A PARTIR DO ID EXISTENTE NA LISTA DE ITENS DA COMANDA
-function removerItemComanda(id){
+function removerItemComanda(id) {
     objetoComanda.removerItem(id);
     atualizarTotal();
 }
 
-
 // RETORNA UM ITEM A PARTIR DO IDENTIFICADOR
-function buscaItemPeloIdentificador(identificador){
+function buscaItemPeloIdentificador(identificador) {
     for (const categoria in itensList) {
         const itensCategoria = itensList[categoria];
         const itemEncontrado = itensCategoria.find(item => item.identificador === identificador);
         if (itemEncontrado) {
-          return itemEncontrado;
+            return itemEncontrado;
         }
-      }
-      // Se o item não for encontrado, retorna null ou outra indicação de que não foi encontrado
-      return null;
     }
+    // Se o item não for encontrado, retorna null ou outra indicação de que não foi encontrado
+    return null;
+}
 
 function atualizarTotal() {
     // Atualizar o total na interface do usuário
@@ -74,8 +67,6 @@ function preencherModal(item) {
     var btnAdicionarItemComanda = document.querySelector('#modalProdutoSelecionado .btnAdicionarItemComanda');
     btnAdicionarItemComanda.setAttribute('onclick', `adicionarItemComanda('${item.identificador}')`);
 }
-
-
 
 /**
  * CARREGA OS ITENS PARA SELEÇÃO
@@ -104,11 +95,11 @@ function carregarItens(callback) {
                 $(".product-lists").isotope();
             }, 500);
             //
-            if(callback) callback();
+            if (callback) callback();
         })
         .catch(error => console.log(error));
 
-    function adicionaFiltroCategoria(categoria){
+    function adicionaFiltroCategoria(categoria) {
         const novoItem = document.createElement('li');
         novoItem.textContent = categoria;
         novoItem.setAttribute('data-filter', `.${removerAcentosEspeciais(categoria)}`);
@@ -134,9 +125,9 @@ function carregarItens(callback) {
 function removerAcentosEspeciais(str) {
     // Substitui os caracteres acentuados por seus equivalentes sem acento
     str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    
+
     // Substitui os caracteres especiais e o 'ç' por ''
     str = str.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
-    
+
     return str;
-  }
+}
