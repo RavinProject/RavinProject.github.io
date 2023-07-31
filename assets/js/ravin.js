@@ -78,7 +78,7 @@ function preencherModal(produto) {
 function carregarItens(callback) {
     var box_itens = document.querySelector('.product-lists');
     var ul_categorias = document.querySelector('.product-filters ul');
-    fetch(`http://api.npoint.io/c442d6ba06c605014033/`)
+    fetch(`https://api.npoint.io/c442d6ba06c605014033/`)
         .then(response => response.json())
         .then(data => {
             itensList = data;
