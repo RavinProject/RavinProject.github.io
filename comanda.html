@@ -162,34 +162,7 @@
 									<th class="product-total">Total</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr class="table-body-row">
-									<td class="product-remove"><a href="#" title="remover"><i class="far fa-window-close"></i></a></td>
-									<td class="product-image"><img src="assets/img/products/product-img-1.jpg" alt="">
-									</td>
-									<td class="product-name">Strawberry</td>
-									<td class="product-price">$85</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
-								</tr>
-								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
-									<td class="product-image"><img src="assets/img/products/product-img-2.jpg" alt="">
-									</td>
-									<td class="product-name">Berry</td>
-									<td class="product-price">$70</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
-								</tr>
-								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
-									<td class="product-image"><img src="assets/img/products/product-img-3.jpg" alt="">
-									</td>
-									<td class="product-name">Lemon</td>
-									<td class="product-price">$35</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
-								</tr>
+							<tbody id="itens_selecionados">
 							</tbody>
 						</table>
 					</div>
@@ -244,6 +217,12 @@
 	<script src="assets/js/model/Pedido.js"></script>
 	<!-- Ravin APP Scripts -->
 	<script src="assets/js/ravin.js"></script>
+	<script>
+		// SCRIPTS ESPECÍFICOS PARA ESTA PÁGINA
+		$(document).ready(function ($) {
+			carregaTelaComanda();
+		});
+	</script>
 </body>
 
 </html>

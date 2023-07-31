@@ -6,7 +6,7 @@ class Comanda {
             itens: [
                 { // item importante apenas para demonstração da estrutura de dados, é sobrescrito ou zerado logo em seguida
                     id: 0,
-                    item: {
+                    produto: {
                         identificador: "005",
                         categoria: "Água",
                         nome: "Água Mineral",
@@ -14,7 +14,8 @@ class Comanda {
                         valor: 2.00,
                         imagem: "agua500.jpg"
                     },
-                    quantidade: 0
+                    quantidade: 0,
+                    total: 0
                 }
             ],
             total: 0
@@ -34,6 +35,11 @@ class Comanda {
         }
     }
 
+    // retirna a lista de itens da comanda
+    getItens(){
+        return this.comanda.itens;
+    }
+
     /**
      * Encontra o maior ID na lista de itens da comanda.
      *
@@ -48,7 +54,7 @@ class Comanda {
      *                   se a lista de itens estiver vazia.
      */
     encontrarMaiorId() {
-        return Math.max(0, ...this.comanda.itens.map(item => item.id));
+        return Math.max(0, ...this.comanda.itens.map(produto => produto.id));
     }
 
     // Função para gerar o próximo ID baseado no maior ID existente na lista de itens
@@ -57,23 +63,25 @@ class Comanda {
         return maiorId + 1;
     }
 
-    // Função para adicionar um item à comanda
-    adicionarItem(item, quantidade) {
-        this.comanda.itens.push({
+    // Função para adicionar item à comanda
+    adicionarItem(produto, quantidade) {
+        var item = {
             id: this.getNextIdItem(),
-            item: item,
-            quantidade: quantidade
-        });
-        this.comanda.total += quantidade * item.valor; // TODO arrumar cálculo da soma do total da comanda
+            produto: produto,
+            quantidade: quantidade,
+            total: quantidade * produto.valor
+        };
+        this.comanda.itens.push(item);
+        this.comanda.total += item.total;
         this.atualizaStorage(this.comanda);
     }
 
     // Função para remover um item da comanda pelo ID
-    removerItem(idItem) {
-        const index = this.comanda.itens.findIndex(item => item.id === idItem);
+    removerItem(produtoId) {
+        const index = this.comanda.itens.findIndex(produto => produto.id === produtoId);
         if (index > -1) {
-            const item = this.comanda.itens[index].item;
-            this.comanda.total -= this.comanda.itens[index].quantidade * item.valor; // TODO arrumar cálculo da subtração do total da comanda
+            const item = this.comanda.itens[index];
+            this.comanda.total -= this.comanda.total - item.total;
             this.comanda.itens.splice(index, 1);
             this.atualizaStorage(this.comanda);
         }

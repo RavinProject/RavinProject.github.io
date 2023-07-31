@@ -19,8 +19,8 @@ const objetoComanda = new Comanda(); // Objeto javascript para controlar toda a 
 // ADICIONA UM ITEM A COMANDA A PARTIR DO IDENTIFICADOR
 function adicionarItemComanda(identificador) {
     var quantidade = document.querySelector('#modalProdutoSelecionado #quantidade').value;
-    var item = buscaItemPeloIdentificador(identificador);
-    objetoComanda.adicionarItem(item, quantidade);
+    var produto = buscaItemPeloIdentificador(identificador);
+    objetoComanda.adicionarItem(produto, quantidade);
     atualizarTotal();
     alert("Item incluído a comanda!");
     $('#modalProdutoSelecionado').modal('hide');
@@ -55,17 +55,17 @@ function atualizarNumeroComanda() {
 }
 
 // COMPLETA O MODAL COM AS INFORMAÇÕES DO ITEM SELECIONADO
-function preencherModal(item) {
-    var imageURL = "assets/img/products/" + item.imagem;
+function preencherModal(produto) {
+    var imageURL = "assets/img/products/" + produto.imagem;
     document.querySelector('#modalProdutoSelecionado .single-product-img img').src = imageURL;
-    document.querySelector('#modalProdutoSelecionado .single-product-content h3').innerText = item.nome;
-    document.querySelector('#modalProdutoSelecionado .single-product-content .single-product-pricing').innerText = 'R$' + item.valor.toFixed(2);
+    document.querySelector('#modalProdutoSelecionado .single-product-content h3').innerText = produto.nome;
+    document.querySelector('#modalProdutoSelecionado .single-product-content .single-product-pricing').innerText = 'R$' + produto.valor.toFixed(2);
     document.querySelector('#modalProdutoSelecionado #quantidade').value = 1;
-    document.querySelector('#modalProdutoSelecionado .single-product-content p:not(.single-product-pricing)').innerText = item.descritivo;
-    document.querySelector('#modalProdutoSelecionado #modal-categoria').innerText = item.categoria;
+    document.querySelector('#modalProdutoSelecionado .single-product-content p:not(.single-product-pricing)').innerText = produto.descritivo;
+    document.querySelector('#modalProdutoSelecionado #modal-categoria').innerText = produto.categoria;
     //adiciona o evento para o botão de confirmação 
     var btnAdicionarItemComanda = document.querySelector('#modalProdutoSelecionado .btnAdicionarItemComanda');
-    btnAdicionarItemComanda.setAttribute('onclick', `adicionarItemComanda('${item.identificador}')`);
+    btnAdicionarItemComanda.setAttribute('onclick', `adicionarItemComanda('${produto.identificador}')`);
 }
 
 /**
@@ -74,7 +74,7 @@ function preencherModal(item) {
 function carregarItens(callback) {
     var box_itens = document.querySelector('.product-lists');
     var ul_categorias = document.querySelector('.product-filters ul');
-    fetch(`https://api.npoint.io/c442d6ba06c605014033/`)
+    fetch(`http://api.npoint.io/c442d6ba06c605014033/`)
         .then(response => response.json())
         .then(data => {
             itensList = data;
@@ -106,17 +106,17 @@ function carregarItens(callback) {
         ul_categorias.appendChild(novoItem);
     }
 
-    function getBoxItem(categoria, item) {
-        var imageURL = "assets/img/products/" + item.imagem;
+    function getBoxItem(categoria, produto) {
+        var imageURL = "assets/img/products/" + produto.imagem;
         return `<div class="product-item col-lg-4 col-md-6 text-center ${removerAcentosEspeciais(categoria)}" >
         <div class="single-product-item">
             <div class="product-image">
-                <img src="${imageURL}" alt="${item.nome}">
+                <img src="${imageURL}" alt="${produto.nome}">
             </div>
-            <h3>${item.nome}</h3>
-            <p class="product-description">${item.descritivo}</p>
-            <p class="product-price"><span>Unidade</span> R$ ${item.valor.toFixed(2)} </p>
-            <a href="#" class="cart-btn" data-item='${encodeURI(JSON.stringify(item))}'><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
+            <h3>${produto.nome}</h3>
+            <p class="product-description">${produto.descritivo}</p>
+            <p class="product-price"><span>Unidade</span> R$ ${produto.valor.toFixed(2)} </p>
+            <a href="#" class="cart-btn" data-item='${encodeURI(JSON.stringify(produto))}'><i class="fas fa-shopping-cart"></i> Adicionar a comanda</a>
         </div>
         </div>`;
     }
@@ -130,4 +130,22 @@ function removerAcentosEspeciais(str) {
     str = str.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
 
     return str;
+}
+
+function carregaTelaComanda(){
+    var box_itens = document.getElementById('itens_selecionados');
+    let html = "";
+    objetoComanda.getItens().forEach(function(item){
+        html += `<tr class="table-body-row">
+            <td class="product-remove"><a href="#" title="remover"><i class="far fa-window-close"></i></a></td>
+            <td class="product-image"><img src="assets/img/products/${item.produto.imagem}" alt="">
+            </td>
+            <td class="product-name">${item.produto.nome}</td>
+            <td class="product-price">${item.produto.valor}</td>
+            <td class="product-quantity"><input type="number" placeholder="${item.quantidade}"></td>
+            <td class="product-total">${item.total}</td>
+            </tr>`;
+    });
+    box_itens.innerHTML = html;
+
 }
