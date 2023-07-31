@@ -33,6 +33,7 @@ class Comanda {
                 total: 0
             };
         }
+
     }
 
     // retirna a lista de itens da comanda
@@ -81,7 +82,7 @@ class Comanda {
         const index = this.comanda.itens.findIndex(produto => produto.id === produtoId);
         if (index > -1) {
             const item = this.comanda.itens[index];
-            this.comanda.total -= this.comanda.total - item.total;
+            this.comanda.total -= item.total;
             this.comanda.itens.splice(index, 1);
             this.atualizaStorage(this.comanda);
         }

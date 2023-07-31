@@ -2,8 +2,9 @@
  * DECLARAÇÃO DAS VARIÁVEIS E OBJETOS GLOBAIS
  */
 var itensList = null; //itens recuperados da API
-const objetoComanda = new Comanda(); // Objeto javascript para controlar toda a lógica local referente aos dados de uma comanda
-
+var objetoComanda = new Comanda(); // Objeto javascript para controlar toda a lógica local referente aos dados de uma comanda
+var objetoPedido = new Pedido();
+var listaPedidos = [];
 /** 
  * INICIALIZADORES GLOBAIS 
  * para todas as páginas da aplicação
@@ -12,6 +13,8 @@ const objetoComanda = new Comanda(); // Objeto javascript para controlar toda a 
     $(document).ready(function ($) {
         atualizarTotal();
         atualizarNumeroComanda();
+        pedido = JSON.parse(localStorage.getItem('listaPedidos'));
+        listaPedidos = pedido != null ? pedido : listaPedidos;
     });
 }(jQuery));
 /** FIM */
@@ -23,6 +26,7 @@ function adicionarItemComanda(identificador) {
     objetoComanda.adicionarItem(produto, quantidade);
     atualizarTotal();
     alert("Item incluído a comanda!");
+    event.preventDefault();
     $('#modalProdutoSelecionado').modal('hide');
 }
 
@@ -136,8 +140,8 @@ function carregaTelaComanda(){
     var box_itens = document.getElementById('itens_selecionados');
     let html = "";
     objetoComanda.getItens().forEach(function(item){
-        html += `<tr class="table-body-row">
-            <td class="product-remove"><a href="#" title="remover"><i class="far fa-window-close"></i></a></td>
+        html += `<tr class="table-body-row item_${item.id}">
+            <td class="product-remove"><a href="#" title="Remover item" onclick="removerItemComanda(${item.id}); document.querySelector('.item_${item.id}').remove()"><i class="far fa-window-close"></i></a></td>
             <td class="product-image"><img src="assets/img/products/${item.produto.imagem}" alt="">
             </td>
             <td class="product-name">${item.produto.nome}</td>
@@ -147,5 +151,33 @@ function carregaTelaComanda(){
             </tr>`;
     });
     box_itens.innerHTML = html;
+    document.getElementById('total_comanda').innerHTML = objetoComanda.getTotal();
+}
 
+function fazerPedido(){
+    if(objetoComanda.getItens().length > 0){
+
+        objetoPedido.adicionarComanda(objetoComanda);
+        objetoPedido.realizarPedido();
+
+
+        // adiciona pedido a lista de pedidos
+        listaPedidos.push(objetoPedido);
+
+        // atualiza a lista do pedidos no storage
+        localStorage.setItem('listaPedidos', JSON.stringify(listaPedidos));
+
+        // remove o pedido do storage
+        localStorage.removeItem('pedido');
+
+        // remove a comanda do storage
+        localStorage.removeItem('comanda');
+        
+        // cria novos objetos vazios
+        comanda = new Comanda();
+        objetoPedido = new Pedido();
+
+        alert("Pedido realizado com suscesso!");
+        window.location = "./index.html";
+    }
 }
