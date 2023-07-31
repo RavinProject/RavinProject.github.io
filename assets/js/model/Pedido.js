@@ -1,33 +1,36 @@
 class Pedido {
     constructor() {
+        // ESTRUTURA DOS DADOS DO PEDIDO
+        this.pedido = {
+            numero: 0,
+            comanda: null,
+            datahora: null,
+            status: null
+        };
+
         //inicializa com os valores armazenados no storage (se houver) ao carregar a aplicação
         const data = this.recuperaPedidoStorage();
         if (data !== null) {
             this.pedido = data;
-        } else {
-            //pedido vazio se não houver dados anteriores
-            this.pedido = {
-                numero: 0,
-                comanda: null,
-                datahora: null,
-                status: null
-            };
         }
+
     }
 
     realizarPedido(){
-        // TODO implementar método para realizar pedido
+        // muda o status do pedido
+        this.pedido.status = "realizado";
+        // TODO criar a chamada a Api Rest que irá realizar o pedido no sistema
     }
 
 
     // Função para adicionar uma comanda ao pedido
     adicionarComanda(comanda) {
-        // TODO implementar adicionar comanda ao pedido
+        this.pedido.comanda = comanda;
     }
 
     // Função para atualizar o storage com os dados do pedido
     atualizaStorage(pedido) {
-        localStorage.setItem('pedido', JSON.stringify(comanda));
+        localStorage.setItem('pedido', JSON.stringify(this.pedido));
     }
 
     // Função para recuperar os dados do pedido do storage

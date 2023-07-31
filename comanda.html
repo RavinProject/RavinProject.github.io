@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
 	<!-- title -->
-	<title>Cart</title>
+	<title>Comanda - Ravin Project</title>
 
 	<!-- favicon -->
 	<link rel="shortcut icon" type="image/png" href="assets/img/favicon.png">
@@ -34,47 +34,51 @@
 	<link rel="stylesheet" href="assets/fonts/icomoon/style.css">
 	<link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
+	<!--PreLoader-->
+	<div class="loader">
+		<div class="loader-inner">
+			<div class="circle"></div>
+		</div>
+	</div>
+	<!--PreLoader Ends-->
+
+	<!-- Sidebar start -->
 	<aside class="sidebar">
 		<div class="toggle">
 			<a href="#" class="burger js-menu-toggle" data-toggle="collapse" data-target="#main-navbar">
-					<span></span>
-				</a>
-			</div>
-			<div class="side-inner">
-	
+				<span></span>
+			</a>
+		</div>
+		<div class="side-inner">
+
 			<div class="logo-wrap">
 				<div class="logo">
 				</div>
 				<span class="logo-text">Ravin</span>
 			</div>
-			
+
 			<div class="nav-menu">
 				<ul>
-				<li class="active"><a href="index.html" class="d-flex align-items-center"><span class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
-				<li><a href="cart.html" class="d-flex align-items-center"><span class="wrap-icon icon-shopping-cart mr-3"></span><span class="menu-text">Comanda</span></a></li>
+					<li class="active"><a href="index.html" class="d-flex align-items-center"><span
+								class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
+					<li><a href="comanda.html" class="d-flex align-items-center"><span
+								class="wrap-icon icon-shopping-cart mr-3"></span><span
+								class="menu-text">Comanda</span></a></li>
 				</ul>
 			</div>
-			</div>
-			
-		</aside>
-		<!--PreLoader-->
-    <div class="loader">
-        <div class="loader-inner">
-            <div class="circle"></div>
-        </div>
-    </div>
-    <!--PreLoader Ends-->
-	
+		</div>
+
+	</aside>
+
+
 	<!-- header -->
 	<div class="top-header-area" id="sticker">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 col-sm-12 text-center">
 					<div class="main-menu-wrap">
-						<!-- logo -->
-
-						<!-- logo -->
 
 						<!-- menu start -->
 						<nav class="main-menu">
@@ -92,14 +96,14 @@
 								</li>
 								<li>
 									<div class="header-icons">
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+										<a class="shopping-cart" href="comanda.html"><i
+												class="fas fa-shopping-cart"></i></a>
 									</div>
 								</li>
 							</ul>
 						</nav>
 						<div class="mobile-menu"></div>
 						<!-- menu end -->
-
 					</div>
 				</div>
 			</div>
@@ -125,15 +129,15 @@
 		</div>
 	</div>
 	<!-- end search arewa -->
-	
+
 	<!-- breadcrumb-section -->
 	<div class="breadcrumb-section breadcrumb-bg">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
-						<p>Fresh and Organic</p>
-						<h1>Cart</h1>
+						<p>Coma bem, viva bem!</p>
+						<h1>Comanda</h1>
 					</div>
 				</div>
 			</div>
@@ -151,38 +155,14 @@
 							<thead class="cart-table-head">
 								<tr class="table-head-row">
 									<th class="product-remove"></th>
-									<th class="product-image">Product Image</th>
-									<th class="product-name">Name</th>
-									<th class="product-price">Price</th>
-									<th class="product-quantity">Quantity</th>
+									<th class="product-image"></th>
+									<th class="product-name">Item</th>
+									<th class="product-price">Preço</th>
+									<th class="product-quantity">Quantidade</th>
 									<th class="product-total">Total</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
-									<td class="product-image"><img src="assets/img/products/product-img-1.jpg" alt=""></td>
-									<td class="product-name">Strawberry</td>
-									<td class="product-price">$85</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
-								</tr>
-								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
-									<td class="product-image"><img src="assets/img/products/product-img-2.jpg" alt=""></td>
-									<td class="product-name">Berry</td>
-									<td class="product-price">$70</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
-								</tr>
-								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
-									<td class="product-image"><img src="assets/img/products/product-img-3.jpg" alt=""></td>
-									<td class="product-name">Lemon</td>
-									<td class="product-price">$35</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
-								</tr>
+							<tbody id="itens_selecionados">
 							</tbody>
 						</table>
 					</div>
@@ -190,41 +170,10 @@
 
 				<div class="col-lg-4">
 					<div class="total-section">
-						<table class="total-table">
-							<thead class="total-table-head">
-								<tr class="table-total-row">
-									<th>Total</th>
-									<th>Price</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="total-data">
-									<td><strong>Subtotal: </strong></td>
-									<td>$500</td>
-								</tr>
-								<tr class="total-data">
-									<td><strong>Shipping: </strong></td>
-									<td>$45</td>
-								</tr>
-								<tr class="total-data">
-									<td><strong>Total: </strong></td>
-									<td>$545</td>
-								</tr>
-							</tbody>
-						</table>
+						<h4> Total: <span id="total_comanda">R$ 0,00</div></h4>
 						<div class="cart-buttons">
-							<a href="cart.html" class="boxed-btn">Update Cart</a>
-							<a href="checkout.html" class="boxed-btn black">Check Out</a>
-						</div>
-					</div>
-
-					<div class="coupon-section">
-						<h3>Apply Coupon</h3>
-						<div class="coupon-form-wrap">
-							<form action="index.html">
-								<p><input type="text" placeholder="Coupon"></p>
-								<p><input type="submit" value="Apply"></p>
-							</form>
+							<a href="#" class="boxed-btn" onclick="fazerPedido()">Fazer pedido</a>
+							<!-- <a href="checkout.html" class="boxed-btn black">Check Out</a> -->
 						</div>
 					</div>
 				</div>
@@ -233,15 +182,15 @@
 	</div>
 	<!-- end cart -->
 
-		<!-- footer invisível -->
+	<!-- footer invisível -->
 
-		<div class="footer-area">
+	<div class="footer-area">
 
-		</div>
-	
-		<!-- fim footer invisível -->
+	</div>
 
-	
+	<!-- fim footer invisível -->
+
+
 	<!-- jquery -->
 	<script src="assets/js/jquery-1.11.3.min.js"></script>
 	<!-- bootstrap -->
@@ -260,8 +209,20 @@
 	<script src="assets/js/jquery.meanmenu.min.js"></script>
 	<!-- sticker js -->
 	<script src="assets/js/sticker.js"></script>
-	<!-- main js -->
-	<script src="assets/js/main.js"></script>
-
+	<!-- Template Control JS -->
+	<script src="assets/js/templateControl.js"></script>
+	<!-- Objeto Comanda -->
+	<script src="assets/js/model/Comanda.js"></script>
+	<!-- Objeto Pedido -->
+	<script src="assets/js/model/Pedido.js"></script>
+	<!-- Ravin APP Scripts -->
+	<script src="assets/js/ravin.js"></script>
+	<script>
+		// SCRIPTS ESPECÍFICOS PARA ESTA PÁGINA
+		$(document).ready(function ($) {
+			carregaTelaComanda();
+		});
+	</script>
 </body>
+
 </html>
