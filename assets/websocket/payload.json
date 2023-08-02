@@ -1,0 +1,20 @@
+[
+    {
+        "action":"newOrder",
+        "params":{
+            "table": "${localStorage.getItem('tableName')}",
+            "item": "${item.id}",
+            "valor": "${item.valor}",
+            "quantidade": "${item.quantidade}"
+        }
+    },
+    {
+        "action":"newOrder",
+        "params":{
+            "table": "${localStorage.getItem('tableName')}",
+            "item": "${item.id}",
+            "valor": "${item.valor}",
+            "quantidade": "${item.quantidade}"
+        }
+    }
+]
