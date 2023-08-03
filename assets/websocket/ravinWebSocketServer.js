@@ -73,7 +73,7 @@ const doLogin = (table, connection) => {
         console.log(`Erro ao efetuar login, MESA ${table}`);
     } else {
         // Conexão de cozinha ou mesa
-        if (table === "kitchen") {
+        if (table === "kitchen") { 
             kitchenConnected = connection;
         } else {
             console.log(`Mesa online ${table}`);
