@@ -1,118 +1,103 @@
 #!/usr/bin/env node
 
-var WebSocketServer = require('websocket').server;
-var http = require('http');
-const { connect } = require('http2');
+// Importando as bibliotecas necessárias
+const WebSocketServer = require('websocket').server;
+const http = require('http');
+require('dotenv').config();
 
-var clientsConnected = [];
-var kitchenConnected = [];
+// Inicializando listas para armazenar clientes conectados e cozinha conectada
+const clientsConnected = [];
+const kitchenConnected = [];
 
-//Cria o server
-var server = http.createServer(function(request, response) {
+// Cria o servidor HTTP para lidar com solicitações que não são do WebSocket
+const server = http.createServer((request, response) => {
     console.log((new Date()) + ' Recebida requisição para ' + request.url);
     response.writeHead(404);
     response.end();
 });
 
-//Inicia o server
-server.listen(3000, function() {
+// Inicia o servidor HTTP na porta 3000
+server.listen(3000, () => {
     console.log((new Date()) + ' WebSocket Server rodando na porta 3000');
 });
 
-//Monta o objeto do tipo WebSocketServer
-wsServer = new WebSocketServer({
+// Cria o servidor WebSocket associado ao servidor HTTP
+const wsServer = new WebSocketServer({
     httpServer: server,
     autoAcceptConnections: false
 });
 
-//Criptografa a requisição e faz o handshake (sinceramente não sei como esse método funciona)
-wsServer.on('upgrade', function (req, socket) {
-    if (req.headers['upgrade'] !== 'websocket') {
-        socket.end('HTTP/1.1 400 Bad Request');
-        return;
-    }
-    const acceptKey = req.headers['sec-websocket-key'];
-    const hash = generateAcceptValue(acceptKey);
-    const responseHeaders = [ 'HTTP/1.1 101 Web Socket Protocol Handshake', 'Upgrade: WebSocket', 'Connection: Upgrade', `Sec-WebSocket-Accept: ${hash}` ];
-
-    const protocol = req.headers['sec-websocket-protocol'];
-    const protocols = !protocol ? [] : protocol.split(',').map(s => s.trim());
-    if (protocols.includes('json')) {
-        responseHeaders.push(`Sec-WebSocket-Protocol: json`);
-    }
-
-    socket.write(responseHeaders.join('\r\n') + '\r\n\r\n');
-});
-
-//Leitura das requests para o websocket
-wsServer.on('request', function(request) {
-
-    var connection = request.accept();
+// Lidando com solicitações WebSocket recebidas
+wsServer.on('request', (request) => {
+    // Aceitando a conexão e adicionando-a à lista de clientes conectados
+    const connection = request.accept();
     clientsConnected.push(connection);
 
-    //Quando recebe mensagem
-    connection.on('message', function(message) {
-
-        if (message.type === 'utf8') {
-            try {
-                var data = JSON.parse(message.utf8Data);
-            } catch (e) {
-                mensagem = formatMessage("erro", 'Formato da mensagem inválido, as mensagens devem ser no formato JSON e devem seguir o padrão de formatação, exemplo: {"action":"nomeDoMetodo","params":{"parametro":"1"}}');
-                connection.sendUTF(mensagem);
-                console.log('Formato da mensagem inválido, as mensagens devem ser no formato JSON e devem seguir o padrão de formatação, exemplo: {"action":"nomeDoMetodo","params":{"parametro":"1"}}');
-                return;
-            }
-
+    // Lidando com mensagens recebidas na conexão
+    connection.on('message', (message) => {
+        if (message.type !== 'utf8') return; // Ignorar mensagens que não são UTF-8
+        console.log(message);
+        try {
+            // Tentando analisar a mensagem JSON
+            const data = JSON.parse(message.utf8Data);
             const action = data.action;
-            switch(action) {
+            switch (action) {
                 case "login":
+                    // Tratar ação de login
                     doLogin(data.params.table, connection);
-                    answerMessage = formatMessage("loginAnswer", 'success');
+                    const answerMessage = formatMessage("loginAnswer", 'success');
                     connection.sendUTF(answerMessage);
                     break;
+                case "newOrder":
+                    
             }
+        } catch (e) {
+            // Tratamento de erros para mensagens malformadas
+            const errorMessage = formatMessage("erro", 'Formato da mensagem inválido...');
+            connection.sendUTF(errorMessage);
+            console.log(errorMessage);
         }
     });
 });
 
-function getIndexByConnection(connection) {
-    let index;
-    clientsConnected.forEach(function(valor, chave) {
-        if (connection == valor) {
-        index = chave;
-        }
-    });
+// Função para encontrar o índice do cliente na lista de clientes conectados
+const getIndexByConnection = (connection) => clientsConnected.findIndex((valor) => connection == valor);
 
-    return index;
-}
-
-function doLogin(table, connection) {
-    var index = getIndexByConnection(connection);
-    if (index === false) {
-        let mensagem = formatMessage("erro", "Erro ao efetuar login");
+// Função para lidar com a ação de login
+const doLogin = (table, connection) => {
+    const index = getIndexByConnection(connection);
+    if (index === -1) {
+        // Erro caso a conexão não seja encontrada
+        const mensagem = formatMessage("erro", "Erro ao efetuar login");
         connection.sendUTF(mensagem);
-        console.log('Erro ao efetuar login, MESA ' + table);
+        console.log(`Erro ao efetuar login, MESA ${table}`);
     } else {
-        if(table === "kitchen"){
+        // Conexão de cozinha ou mesa
+        if (table === "kitchen") {
             kitchenConnected = connection;
         } else {
-            connectedTables[index]['table'] = table;
-            console.log('Mesa online ' + table);
+            console.log(`Mesa online ${table}`);
         }
-        
     }
-}
+};
 
-function formatMessage(action, data) {
-	
+// Função para criar um pedido
+// 'tableName'
+// item.id
+// item.valor
+// item.quantidade
+// const createdOrder = (table, )
+
+// Função para formatar mensagens de resposta
+const formatMessage = (action, data) => {
     let mensagem;
-
-    switch(action) {
+    switch (action) {
         case 'erro':
         case 'loginAnswer':
-            mensagem = {"action":action,"params":{"msg":data}};
+            // Formatação básica para mensagens de erro ou resposta de login
+            mensagem = { "action": action, "params": { "msg": data } };
             break;
+        // Outros casos podem ser adicionados aqui
     }
-
-    return JSON.stringify(mensagem);
-}
+    return JSON.stringify(mensagem); // Convertendo o objeto em string JSON
+};

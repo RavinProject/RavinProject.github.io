@@ -1,7 +1,6 @@
-# Protótipo de Menu Digital
+# Protótipo de Menu Digital -  Branch Websocket
 
-Este repositório contém um protótipo de um menu digital criado para tablets. O site estático foi construído com HTML, CSS e JavaScript, utilizando dados de um arquivo JSON remoto para simular o consumo de uma API.
-Exercício do Programa +Devs2Blu 2023. 
+Nesta versão do código, criamos uma funcionalidade websocket para implementar algumas funções.
 
 ## Propósito
 
