@@ -1,10 +1,48 @@
-# Protótipo de Menu Digital -  Branch Websocket
+# Protótipo de Menu Digital
 
-Nesta versão do código, criamos uma funcionalidade websocket para implementar algumas funções.
+Este repositório contém um protótipo de um menu digital criado para tablets.
+
+O site estático foi construído com HTML, CSS e JavaScript, utilizando dados de um arquivo JSON remoto para simular o consumo de uma API.
+
+Também conta com uma implementação simples de um servidor websocket para manejo de login de mesas, pedidos e mudança de status de pedidos (*em desenvolvimento*)
+
+Exercício do Programa +Devs2Blu 2023.
 
 ## Propósito
 
-A interface de usuário é projetada para ser fácil de usar em tablets, tornando-a ideal para ser usada como um menu digital em restaurantes ou cafés.
+A interface de usuário foi projetada para ser de fácil uso em tablets, tornando-a ideal para ser usada como um menu digital em restaurantes ou cafés.
+
+## Instalação e execução local (servidor Websocket)
+
+1. `cd server`
+2. `npm i`
+3. `npm start`
+
+## Testando a API
+
+Como no postman não é possível ainda a publicação da documentação da API, o teste dela para o público ainda precisaria ser realizada manualmente, já que o servidor ainda não está modificando o código Frontend.
+
+## Diagrama de sequência
+
+```mermaid
+sequenceDiagram
+    participant App as Aplicativo Cliente
+    participant Server as Servidor Websocket
+    participant Kitchen as Cozinha
+
+    App->>Server: Vincular cliente com mesa
+    Server->>App: Mesa vinculada
+    App->>Server: Criar nova comanda
+    Server->>App: Comanda criada
+    App->>Server: Solicitar novo pedido
+    Server->>Kitchen: Iniciar preparo pedido
+    Kitchen->>Server: Inciado preparo do pedido
+    Server->>App: Pedido Criado com Sucesso
+    Kitchen->>Server: Pedido pronto para entrega
+    Server->>App: Pedido pronto para entrega
+    App->>Server: Listar todos os pedidos da comanda
+    Server->>App: Pedidos da comanda
+```
 
 ## Especificações do desafio
 
