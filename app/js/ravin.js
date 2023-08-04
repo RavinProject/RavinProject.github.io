@@ -60,7 +60,7 @@ function atualizarNumeroComanda() {
 
 // COMPLETA O MODAL COM AS INFORMAÇÕES DO ITEM SELECIONADO
 function preencherModal(produto) {
-    var imageURL = "assets/img/products/" + produto.imagem;
+    var imageURL = "app/img/products/" + produto.imagem;
     document.querySelector('#modalProdutoSelecionado .single-product-img img').src = imageURL;
     document.querySelector('#modalProdutoSelecionado .single-product-content h3').innerText = produto.nome;
     document.querySelector('#modalProdutoSelecionado .single-product-content .single-product-pricing').innerText = 'R$' + produto.valor.toFixed(2);
@@ -111,7 +111,7 @@ function carregarItens(callback) {
     }
 
     function getBoxItem(categoria, produto) {
-        var imageURL = "assets/img/products/" + produto.imagem;
+        var imageURL = "app/img/products/" + produto.imagem;
         return `<div class="product-item col-lg-4 col-md-6 text-center ${removerAcentosEspeciais(categoria)}" >
         <div class="single-product-item">
             <div class="product-image">
@@ -142,7 +142,7 @@ function carregaTelaComanda(){
     objetoComanda.getItens().forEach(function(item){
         html += `<tr class="table-body-row item_${item.id}">
             <td class="product-remove"><a href="#" title="Remover item" onclick="removerItemComanda(${item.id}); document.querySelector('.item_${item.id}').remove()"><i class="far fa-window-close"></i></a></td>
-            <td class="product-image"><img src="assets/img/products/${item.produto.imagem}" alt="">
+            <td class="product-image"><img src="app/img/products/${item.produto.imagem}" alt="">
             </td>
             <td class="product-name">${item.produto.nome}</td>
             <td class="product-price">${item.produto.valor}</td>
