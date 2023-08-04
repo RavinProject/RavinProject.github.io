@@ -33,7 +33,7 @@ exports.doLogin = (table, socket) => {
 // item.quantidade
 // const createdOrder = (table, )
 
-exports.createOrder = (orderData, socket) => {
+exports.createOrder = (pedido, socket) => {
     const index = getIndexByConnection(socket);
     if (index === -1) {
         // Erro caso a conexão não seja encontrada

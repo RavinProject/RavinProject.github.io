@@ -36,7 +36,7 @@ class Comanda {
 
     }
 
-    // retirna a lista de itens da comanda
+    // retorna a lista de itens da comanda
     getItens(){
         return this.comanda.itens;
     }
