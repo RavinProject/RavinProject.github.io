@@ -36,6 +36,8 @@ if (cluster.isMaster) {
     const utils = require('./utils');
     const handlers = require('./handlers');
 
+    const Ravin = require('./Ravin');
+
     // Cria o servidor HTTP para lidar com solicitações que não são do WebSocket
     const server = http.createServer((request, response) => {
         console.log((new Date()) + ' Recebida requisição para ' + request.url);
@@ -70,18 +72,20 @@ if (cluster.isMaster) {
                     console.log(errorMessage);
                     return;
                 }
-                const action = message.action;
+
+                Ravin.nova
+                // const action = message.action;
 
                 // switch cases para cada action
-                switch (action) {
-                    case "login":
-                        // Tratar ação de login
-                        handlers.doLogin(message.params.table, socket);
-                        break;
-                    case "newOrder":
-                        handlers.createOrder(message.params.pedido, socket);
-                        break;
-                }
+                // switch (action) {
+                //     case "login":
+                //         // Tratar ação de login
+                //         handlers.doLogin(message.params.table, socket);
+                //         break;
+                //     case "newOrder":
+                //         handlers.createOrder(message.params.pedido, socket);
+                //         break;
+                // }
             } catch (e) {
                 // Tratamento de erros para mensagens malformadas
                 const errorCode = "INVALID_FORMAT"; // Você pode definir códigos de erro específicos para diferentes tipos de erros
