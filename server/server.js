@@ -36,7 +36,7 @@ if (cluster.isMaster) {
     const utils = require('./utils');
     const handlers = require('./handlers');
 
-    const Ravin = require('./Ravin');
+    
 
     // Cria o servidor HTTP para lidar com solicitações que não são do WebSocket
     const server = http.createServer((request, response) => {
@@ -53,15 +53,20 @@ if (cluster.isMaster) {
     // Cria o servidor WebSocket associado ao servidor HTTP
     const io = socketIo(server);
 
+    const Ravin = require('./Ravin');
+    // Exemplo de uso
+    const ravinInstance = new Ravin(io);
+
     // Lidando com solicitações WebSocket recebidas
     io.on('connection', (socket) => {
         // Adicionando a conexão à lista de clientes conectados
         console.log('a user connected');
         clientsConnected.push(socket);
-
+        const index = getIndexByConnection(socket);
+        
         // Lidando com mensagens recebidas na conexão
         socket.on('message', (message) => {
-            console.log('Mensagem recebida:', message);
+            // console.log('Mensagem recebida:', message);
             try {
                 // Tentando analisar a mensagem
                 const validationError = utils.validateMessage(message);
@@ -72,20 +77,9 @@ if (cluster.isMaster) {
                     console.log(errorMessage);
                     return;
                 }
+                // Ravin que se vire daqui pra frente
+                ravinInstance.novaSolicitacao(index, message);
 
-                Ravin.nova
-                // const action = message.action;
-
-                // switch cases para cada action
-                // switch (action) {
-                //     case "login":
-                //         // Tratar ação de login
-                //         handlers.doLogin(message.params.table, socket);
-                //         break;
-                //     case "newOrder":
-                //         handlers.createOrder(message.params.pedido, socket);
-                //         break;
-                // }
             } catch (e) {
                 // Tratamento de erros para mensagens malformadas
                 const errorCode = "INVALID_FORMAT"; // Você pode definir códigos de erro específicos para diferentes tipos de erros

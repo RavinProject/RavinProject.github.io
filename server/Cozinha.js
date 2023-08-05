@@ -1,6 +1,6 @@
 class Cozinha {
-    constructor () {
-        
+    constructor (connectionIndex) {
+        this.connectionIndex = connectionIndex;
     }
 
     novoPedido(pedido){
@@ -13,3 +13,4 @@ class Cozinha {
 
 
 }
+module.exports = Cozinha;
