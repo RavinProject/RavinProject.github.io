@@ -36,7 +36,7 @@ if (cluster.isMaster) {
     const utils = require('./utils');
     const handlers = require('./handlers');
 
-    
+
 
     // Cria o servidor HTTP para lidar com solicitações que não são do WebSocket
     const server = http.createServer((request, response) => {
@@ -53,40 +53,18 @@ if (cluster.isMaster) {
     // Cria o servidor WebSocket associado ao servidor HTTP
     const io = socketIo(server);
 
+    // Controlador da Aplicação
     const Ravin = require('./Ravin');
-    // Exemplo de uso
-    const ravinInstance = new Ravin(io);
+    const RavinController = new Ravin(io);
 
     // Lidando com solicitações WebSocket recebidas
     io.on('connection', (socket) => {
-        // Adicionando a conexão à lista de clientes conectados
-        console.log('a user connected');
+        console.log('Novo cliente conectado');
         clientsConnected.push(socket);
-        
-        // Lidando com mensagens recebidas na conexão
         socket.on('message', (message) => {
-            // console.log('Mensagem recebida:', message);
-            try {
-                // Tentando analisar a mensagem
-                const validationError = utils.validateMessage(message);
-                if (validationError) {
-                    // Se houver um erro de validação, o tratamos aqui
-                    const errorMessage = utils.formatError("erro", validationError, "Erro de validação. Revise o formato da sua mensagem");
-                    socket.emit('message', errorMessage);
-                    console.log(errorMessage);
-                    return;
-                }
-                // Ravin que se vire daqui pra frente
-                ravinInstance.novaSolicitacao(socket, message);
-
-            } catch (e) {
-                // Tratamento de erros para mensagens malformadas
-                const errorCode = "INVALID_FORMAT"; // Você pode definir códigos de erro específicos para diferentes tipos de erros
-                const errorMessage = utils.formatError("erro", errorCode, 'Formato da mensagem inválido...');
-                socket.emit('message', errorMessage);
-                console.log(errorMessage);
-                console.log(e);
-            }
+            
+            RavinController.novaSolicitacao(socket, message);
+            
         });
     });
 
