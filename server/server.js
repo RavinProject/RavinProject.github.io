@@ -62,7 +62,6 @@ if (cluster.isMaster) {
         // Adicionando a conexão à lista de clientes conectados
         console.log('a user connected');
         clientsConnected.push(socket);
-        const index = getIndexByConnection(socket);
         
         // Lidando com mensagens recebidas na conexão
         socket.on('message', (message) => {
@@ -78,7 +77,7 @@ if (cluster.isMaster) {
                     return;
                 }
                 // Ravin que se vire daqui pra frente
-                ravinInstance.novaSolicitacao(index, message);
+                ravinInstance.novaSolicitacao(socket, message);
 
             } catch (e) {
                 // Tratamento de erros para mensagens malformadas

@@ -1,12 +1,17 @@
+const { getIndexByConnection } = require('./connections');
 class Mesa {
-    constructor (connectionIndex) {
-        this.connectionIndex = connectionIndex;
+    constructor (socket) {
         this.numero;
         this.listaPedidos = [];
+        this.socket = socket;
+    }
+
+    getSocket(){
+        return this.socket;
     }
 
     getConnectionIndex(){
-        return this.connectionIndex;
+        return getIndexByConnection(this.socket);
     }
 
     novoPedido(pedido){

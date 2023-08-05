@@ -1,3 +1,4 @@
+const { getIndexByConnection } = require('./connections');
 class Cozinha {
     constructor (connectionIndex) {
         this.connectionIndex = connectionIndex;

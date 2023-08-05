@@ -5,25 +5,25 @@ const Cozinha = require('./Cozinha');
 
 class Ravin {
 
-    constructor (socket) {
-        this.socket = socket;
+    constructor (io) {
+        this.io = io;
         this.listaMesas = [];
         this.listaCozinha = [];
     }
 
     /**
      * Recebe uma nova solicitação do webSocket e faz o devido encaminhamento
-     * @param {*} connectionIndex 
+     * @param {*} socket 
      * @param {*} message 
      */
-    novaSolicitacao(connectionIndex, message){
-        console.log(connectionIndex, message);
+    novaSolicitacao(socket, message){
+        console.log("Nova solicitação da Conexão " + getIndexByConnection(socket), message);
         switch (message.action) {
             case "login":
-                this.login(connectionIndex, message.params);
+                this.login(socket, message.params);
                 break;
             case "novoPedido":
-                this.novoPedido(connectionIndex, message.params);
+                this.novoPedido(socket, message.params);
                 break;
         }
     }
@@ -33,42 +33,36 @@ class Ravin {
      * @param {*} connectionIndex 
      * @param {*} message 
      */
-    notificaConexao(connectionIndex, message){
+    notificaConexao(socket, message){
         // TODO localizar a conexao alvo pelo index
-        
-        // let connectedSockets = this.socket.sockets.sockets; // CHAT GPT
-        // let con = connectedSockets[connectionIndex];
-        let con = getIndexByConnection(connectionIndex);
-        console.log(con);
-        con.emit('message', 'foi!!!!!!!!!!!!!!');
+
+        socket.emit('message', "vão bora!!!");
     }
 
     notificaMesa(mesa, pedido){
-        this.notificaConexao(mesa.getConnectionIndex(), pedido);
+        this.notificaConexao(mesa.getSocket(), pedido);
     }
 
-    login(connectionIndex, params){
+    login(socket, params){
 
         if (params.table === "cozinha") { 
             const answerMessage = utils.formatMessage("loginKitchen", 'success');
-            this.socket.emit('message', answerMessage);
             console.log(`Cozinha online ${params.table}`);
-            this.listaCozinha.push(new Cozinha(connectionIndex));
-
-            kitchenConnected.push(connectionIndex);
+            this.listaCozinha.push(new Cozinha(socket));
+            socket.emit('message', answerMessage);
         } else if (params.table === "mesa") {
             const answerMessage = utils.formatMessage("loginTable", 'success');
-            this.socket.emit('message', answerMessage);
             console.log(`Mesa online ${params.table}`);
-            this.listaMesas.push(new Mesa(connectionIndex));
-            tablesConnected.push(connectionIndex);
+            this.listaMesas.push(new Mesa(socket));
+            socket.emit('message', answerMessage);
         }
     }
 
-    selecionaMesa(connectionIndex){
+    selecionaMesa(socket){
         let mesa = null;
+        let indexSocket = getIndexByConnection(socket);
         this.listaMesas.forEach((m)=>{
-            if(m.getConnectionIndex() == connectionIndex){
+            if(m.getConnectionIndex() == indexSocket){
                 console.log("Mesa localizada!", m);
                 mesa = m;
             }
@@ -76,10 +70,10 @@ class Ravin {
         return mesa;
     }
 
-    novoPedido(connectionIndex, params){
+    novoPedido(socket, params){
 
         //TODO atualizar lista de pedidos e enviar para a cozinha
-        let mesa = this.selecionaMesa(connectionIndex);
+        let mesa = this.selecionaMesa(socket);
         if(mesa){
             let pedido = mesa.novoPedido(params.pedido);
             this.notificaMesa(mesa, pedido);
