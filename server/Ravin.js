@@ -2,17 +2,18 @@ const { clientsConnected, tablesConnected, kitchenConnected, getIndexByConnectio
 const utils = require('./utils');
 const Mesa = require('./Mesa');
 const Cozinha = require('./Cozinha');
+
+
+// Listas Constantes
+const listaMesa = [];
+const listaCozinha = [];
 const listaUsuarios = require('./UsersList');
 
 class Ravin {
 
     constructor (io) {
-        // Instancia do servidor Socket.io
-        this.io = io;
-        // Listas
-        this.listaUsuariosConectados = [];
-        this.listaMesas = [];
-        this.listaCozinha = [];
+        // Instância do servidor Socket.io, não sei se será utilizada mas tá aqui a referência para caso precisarmos
+        const server = io;
     }
 
     /**
@@ -23,12 +24,12 @@ class Ravin {
     novaSolicitacao(socket, message){
         console.log("Nova solicitação da Conexão " + getIndexByConnection(socket), message);
         // Valida a solicitação
-        if (typeof message.action === 'undefined' || message.action.trim() === '') {
+        if (message.action === undefined || message.action.trim() === '') {
             this.notificaConexao(socket, "Solicitação inválida!");
             return;
         }
         // Valida os parametros
-        if (typeof message.params === 'undefined' || typeof message.params != 'object') {
+        if (message.params === undefined || typeof message.params != 'object') {
             this.notificaConexao(socket, "Parâmetros inválidos!");
             return;
         }
@@ -46,8 +47,55 @@ class Ravin {
         return;
     }
 
-    usuarioDesconectado(socket){
-        console.log("Usuário desconectou!");
+    /**
+     * Faz o login do usuário validando o login e a senha informada,
+     * logo em seguida armazena a informação da conexão da lista de conexões ativas do usuário
+     * @param {*} socket 
+     * @param {*} params 
+     * @returns 
+     */
+    login(socket, params){
+        let login = params.login;
+        let senha = params.senha;
+        if(login === undefined || senha === undefined){
+            this.notificaConexao(socket, "Dados inválidos!");
+            return;
+        }
+        let usuario = null;
+        listaUsuarios.forEach((u)=>{
+            if(u.login == login && u.senha == senha){
+                usuario = u;
+                return;
+            }
+        });
+        if(usuario){
+            usuario.conexoes.push(socket);
+            this.notificaUsuario(usuario, "Login efetuado com sucesso no dispositivo " + params.dispositivo);
+            console.log(usuario.nome + " logou-se no dispositivo " + params.dispositivo);
+        }else{
+            this.notificaConexao(socket, "Usuário não encontrado com os dados informados!");
+            return;
+        }
+    }
+
+    /**
+     * Remove o socket desconectado da lista de conexões do usuário
+     * @param {*} socket 
+     */
+    usuarioSeDesconectou(conIndex){
+        console.log("Conexão index: ", conIndex);
+        let usuario = null;
+        listaUsuarios.forEach((u)=>{
+            for(let i=0; i < u.conexoes.length; i++){
+                let conI = getIndexByConnection(u.conexoes[i]);
+                console.log(".. ", conI);
+                if( conI === getIndexByConnection(socket)){
+                    usuario = u;
+                    usuario.conexoes.splice($i, 1);
+                }
+            }
+        });
+        if(usuario) console.log(usuario.nome + " encerrou uma conexão!");
     }
 
     /**
@@ -65,41 +113,21 @@ class Ravin {
         this.notificaConexao(mesa.getSocket(), pedido);
     }
 
-    login(socket, params){
-        let login = params.usuario;
-        let senha = params.senha;
-        if(login === 'undefined' || senha === 'undefined'){
-            this.notificaConexao(socket, "Dados inválidos!");
-        }
-        let usuario;
-        listaUsuarios.forEach((u)=>{
-            if(u.login === login, u.senha === senha){
-                usuario = u;
-            }
+    /**
+     * Envia uma notificação para todas as instâncias de conexão de um usuario
+     * @param {*} usuario 
+     * @param {*} message 
+     */
+    notificaUsuario(usuario, message){
+        usuario.conexoes.forEach((socket)=>{
+            this.notificaConexao(socket, message);
         });
-        if(usuario){
-            
-        }else{
-            this.notificaConexao(socket, "Usuário não encontrado com os dados informados!");
-        }
-        
-        // if (params.table === "cozinha") { 
-        //     const answerMessage = utils.formatMessage("loginKitchen", 'success');
-        //     console.log(`Cozinha online ${params.table}`);
-        //     this.listaCozinha.push(new Cozinha(socket));
-        //     socket.emit('message', answerMessage);
-        // } else if (params.table === "mesa") {
-        //     const answerMessage = utils.formatMessage("loginTable", 'success');
-        //     console.log(`Mesa online ${params.table}`);
-        //     this.listaMesas.push(new Mesa(socket));
-        //     socket.emit('message', answerMessage);
-        // }
     }
 
     selecionaMesa(socket){
         let mesa = null;
         let indexSocket = getIndexByConnection(socket);
-        this.listaMesas.forEach((m)=>{
+        listaMesas.forEach((m)=>{
             if(m.getConnectionIndex() == indexSocket){
                 console.log("Mesa localizada!", m);
                 mesa = m;

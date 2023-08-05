@@ -59,20 +59,19 @@ if (cluster.isMaster) {
 
     // Lidando com solicitações WebSocket recebidas
     io.on('connection', (socket) => {
-        console.log('Novo cliente conectado');
         clientsConnected.push(socket);
+        const index = getIndexByConnection(socket);
+        console.log("New Connection Index:", index);
         socket.on('message', (message) => {
             
             RavinController.novaSolicitacao(socket, message);
             
         });
-    });
 
-    io.on('disconnect', () => {
-        const index = getIndexByConnection(socket);
-        if (index !== -1) {
-            clientsConnected.splice(index, 1);
-        }
-        console.log('user disconnected');
+        socket.on('disconnect', () => {
+            console.log("Connection", index, "disconneted");
+            RavinController.usuarioSeDesconectou(index);
+        });
+
     });
 }
