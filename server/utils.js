@@ -1,29 +1,29 @@
 // Função para formatar mensagens de resposta
 exports.formatError = (action, errorCode, errorDescription) => {
-  let mensagem = { 
+  let message = { 
     "action": action, 
     "params": { 
       "code": errorCode, 
       "msg": errorDescription 
     } 
   };
-  return JSON.stringify(mensagem);
+  return message;
 };
 
 exports.formatMessage = (action, actionDescription) => {
-  let mensagem = { 
+  let message = { 
     "action": action, 
     "params": { 
       "msg": actionDescription 
     } 
   };
-  return JSON.stringify(mensagem);
+  return message;
 };
 
 
 exports.validateMessage = (message) => {
   if (typeof message.action === 'undefined' || message.action.trim() === '') {
-    return 'Campo "action" não encontrado ou vazio';
+    return message = 'Campo "action" não encontrado ou vazio';
   }
   // Outras validações podem ser adicionadas
   return null; // Retorna nulo se a validação for bem-sucedida
