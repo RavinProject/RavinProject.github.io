@@ -1,11 +1,13 @@
 // Include the cluster module
 const cluster = require('cluster');
 
+const multiThreads = false; // por enquanto terá que ser assim, apenas um processo!
+
 // Code to run if we're in the master process
 if (cluster.isMaster) {
 
     // Count the machine's CPUs
-    const cpuCount = require('os').cpus().length;
+    const cpuCount = multiThreads ? require('os').cpus().length : 1;
 
     // Create a worker for each CPU
     for (let i = 0; i < cpuCount; i += 1) {
@@ -59,9 +61,11 @@ if (cluster.isMaster) {
 
     // Lidando com solicitações WebSocket recebidas
     io.on('connection', (socket) => {
-        clientsConnected.push(socket);
-        const index = getIndexByConnection(socket);
-        console.log("New Connection Index:", index);
+
+        clientsConnected.push(socket); // TODO por enquanto tenho dúvidas quanto a necessidade dessa lista, já que o RavinControler vai armazenar a lista de conexoes de cada usuário
+        
+        console.log(clientsConnected.length, "conexoes ativas");
+
         socket.on('message', (message) => {
             
             RavinController.novaSolicitacao(socket, message);
@@ -69,8 +73,9 @@ if (cluster.isMaster) {
         });
 
         socket.on('disconnect', () => {
-            console.log("Connection", index, "disconneted");
-            RavinController.usuarioSeDesconectou(index);
+
+            RavinController.usuarioSeDesconectou(socket);
+
         });
 
     });

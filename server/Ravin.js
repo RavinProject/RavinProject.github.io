@@ -22,7 +22,7 @@ class Ravin {
      * @param {*} message é a mensagem recebida
      */
     novaSolicitacao(socket, message){
-        console.log("Nova solicitação da Conexão " + getIndexByConnection(socket), message);
+        console.log("Nova solicitação", message);
         // Valida a solicitação
         if (message.action === undefined || message.action.trim() === '') {
             this.notificaConexao(socket, "Solicitação inválida!");
@@ -71,9 +71,14 @@ class Ravin {
         if(usuario){
             usuario.conexoes.push(socket);
             this.notificaUsuario(usuario, "Login efetuado com sucesso no dispositivo " + params.dispositivo);
+            // LOGS DE TESTES APENAS
             console.log(usuario.nome + " logou-se no dispositivo " + params.dispositivo);
+            console.log("Conexoes ativas do usuário", usuario.nome, usuario.conexoes.length);
+            this.notificaTodosUsuarios(usuario.nome + " logou-se no dispositivo " + params.dispositivo);
+            // FIM
         }else{
             this.notificaConexao(socket, "Usuário não encontrado com os dados informados!");
+            console.log("Tentativa de login com os seguintes dados:", params);
             return;
         }
     }
@@ -82,20 +87,63 @@ class Ravin {
      * Remove o socket desconectado da lista de conexões do usuário
      * @param {*} socket 
      */
-    usuarioSeDesconectou(conIndex){
-        console.log("Conexão index: ", conIndex);
+    usuarioSeDesconectou(socket){
         let usuario = null;
         listaUsuarios.forEach((u)=>{
             for(let i=0; i < u.conexoes.length; i++){
-                let conI = getIndexByConnection(u.conexoes[i]);
-                console.log(".. ", conI);
-                if( conI === getIndexByConnection(socket)){
+                if(u.conexoes[i] === socket){
                     usuario = u;
-                    usuario.conexoes.splice($i, 1);
+                    usuario.conexoes.splice(i, 1);
+                    break;
                 }
             }
         });
-        if(usuario) console.log(usuario.nome + " encerrou uma conexão!");
+        this.removeConexoesInativas();
+        if(usuario){
+            if(usuario.conexoes.length > 0){
+                console.log(usuario.nome + " encerrou uma conexão!");
+            }else{
+                console.log(usuario.nome + " está offline!");
+            }
+        }
+        this.listaUsuariosConectados();
+    }
+
+    /**
+     * Remove as conexões que estão inativas, não está funcionando como esperava
+     * TODO Como fechar as conexoes ainda ativas que o usuário fecha o APP sem encerrar a conexão?
+     */
+    removeConexoesInativas(){
+        listaUsuarios.forEach((usuario)=>{
+            // itera de traz pra frente para remover as conexoes inativas
+            for (let i = usuario.conexoes.length - 1; i >= 0; i--) {
+                let socket = usuario.conexoes[i];
+                if(!socket.connected){
+                    usuario.conexoes.splice(i, 1);
+                }
+            }
+        });
+    }
+
+    /**
+     * Envia uma mensagem pra todas as conexões
+     * TODO deve haver um meio mais fácil pra enviar sem ter que iterar as listas
+     * @param {*} message 
+     */
+    notificaTodosUsuarios(message){
+        listaUsuarios.forEach((usuario)=>{
+            usuario.conexoes.forEach((socket)=>{
+                this.notificaConexao(socket, message);
+            });
+        });
+    }
+
+    listaUsuariosConectados(){
+        listaUsuarios.forEach((u)=>{
+            if(u.conexoes.length > 0){
+                console.log(u.nome, "qtd conexões:", u.conexoes.length);
+            }
+        });
     }
 
     /**

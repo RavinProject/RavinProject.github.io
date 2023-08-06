@@ -1,4 +1,4 @@
-module.exports = [
+const listaUsuarios = [
     {
         id: 1,
         tipo: "cozinha",
@@ -24,3 +24,5 @@ module.exports = [
         conexoes: []
     },
 ];
+
+module.exports = listaUsuarios;
