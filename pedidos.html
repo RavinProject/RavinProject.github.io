@@ -34,7 +34,7 @@
 	<link rel="stylesheet" href="app/fonts/icomoon/style.css">
 	<link rel="stylesheet" href="app/css/style.css">
 	<style>
-		.pedidos th{
+		.pedidos th {
 			font-weight: bold !important;
 		}
 	</style>
@@ -71,12 +71,12 @@
 					<li><a href="comanda.html" class="d-flex align-items-center"><span
 								class="wrap-icon icon-shopping-cart mr-3"></span><span
 								class="menu-text">Comanda</span></a></li>
-                    <li><a href="pedidos.html" class="d-flex align-items-center"><span
+					<li><a href="pedidos.html" class="d-flex align-items-center"><span
 								class="wrap-icon icon-shopping-cart mr-3"></span><span
 								class="menu-text">Pedidos</span></a></li>
-                    <li><a href="cozinha.html" class="d-flex align-items-center"><span
-                                class="wrap-icon icon-shopping-cart mr-3"></span><span
-                                class="menu-text">Cozinha</span></a></li>
+					<li><a href="cozinha.html" class="d-flex align-items-center"><span
+								class="wrap-icon icon-shopping-cart mr-3"></span><span
+								class="menu-text">Cozinha</span></a></li>
 				</ul>
 			</div>
 		</div>
@@ -169,7 +169,7 @@
 									<th class="pedido-hora">Hora</th>
 									<th class="pedido-mesa">Mesa</th>
 									<th class="pedido-status">Status</th>
-									<th class="pedido-opcoes">Opções</th>
+									<th class="pedido-total">Total</th>
 								</tr>
 							</thead>
 							<tbody id="listagem_pedidos">
@@ -211,6 +211,8 @@
 	<script src="app/js/sticker.js"></script>
 	<!-- Template Control JS -->
 	<script src="app/js/templateControl.js"></script>
+	<!-- Socket.io-->
+	<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 	<!-- Objeto Comanda -->
 	<script src="app/js/model/Comanda.js"></script>
 	<!-- Objeto Pedido -->
@@ -220,8 +222,23 @@
 	<script>
 		// SCRIPTS ESPECÍFICOS PARA ESTA PÁGINA
 		$(document).ready(function ($) {
-			listarPedidosHtml();
+			atualizarPedidos(listarPedidosHtml);
 		});
+
+		function listarPedidosHtml() {
+			var box_pedido = document.getElementById('listagem_pedidos');
+			let html = "";
+			listaPedidos.forEach((pedido) => {
+				html += `<tr class="table-body-row item_${pedido.numero}">
+            <td class="pedido-numero">${pedido.numero}</td>
+            <td class="pedido-hora">${pedido.datahora}</td>
+            <td class="pedido-mesa">${pedido.mesa}</td>
+            <td class="pedido-status">${pedido.status}</td>
+            <td class="pedido-total">${formatarValorParaReais(pedido.comanda.total)}</td>
+            </tr>`;
+			});
+			box_pedido.innerHTML = html;
+		}
 	</script>
 </body>
 

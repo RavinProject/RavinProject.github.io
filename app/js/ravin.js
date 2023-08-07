@@ -5,6 +5,10 @@ var itensList = null; //itens recuperados da API
 var objetoComanda = new Comanda(); // Objeto javascript para controlar toda a lógica local referente aos dados de uma comanda
 var objetoPedido = new Pedido();
 var listaPedidos = [];
+var serverAWS = true;
+const urlWebsocket = window.location.hostname === 'localhost' && !serverAWS ? 'localhost' : 'ravin-project.eba-u8hvijwt.sa-east-1.elasticbeanstalk.com';
+const portWebsocket = window.location.hostname === 'localhost' && !serverAWS ? '8080' : '80';
+var socket = null;
 /** 
  * INICIALIZADORES GLOBAIS 
  * para todas as páginas da aplicação
@@ -15,9 +19,99 @@ var listaPedidos = [];
         atualizarNumeroComanda();
         pedido = JSON.parse(localStorage.getItem('listaPedidos'));
         listaPedidos = pedido != null ? pedido : listaPedidos;
+        startWebsocket();
     });
 }(jQuery));
 /** FIM */
+
+// SESSÃO WEBSOCKET
+
+function startWebsocket() {
+    // Obter o identificador de sessão do localStorage
+    const savedSocketId = localStorage.getItem('socketId');
+
+    // Reconectar usando o identificador de sessão
+    if (savedSocketId) {
+        socket = io(`${urlWebsocket}:${portWebsocket}`, {
+            query: {
+                sessionId: savedSocketId
+            }
+        });
+
+        // Lidar com eventos e continuar a interação com o servidor
+        socket.on('message', (message) => {
+            processaMensagemServidor(message);
+        });
+
+        // Evento antes do fechamento da página
+        window.addEventListener('beforeunload', () => {
+            socket.emit('clienteFechouAbas'); // Enviar um aviso ao servidor
+        });
+
+    } else {
+        // Conectar ao servidor Socket.IO
+        const socket = io(`${urlWebsocket}:${portWebsocket}`);
+
+        // Armazenar o identificador de sessão no localStorage
+        socket.on('connect', () => {
+            localStorage.setItem('socketId', socket.id);
+        });
+    }
+}
+
+function processaMensagemServidor(message) {
+    if (message.action !== undefined
+        && message.action.trim() !== ''
+        && message.params !== undefined
+        && typeof message.params === 'object') {
+
+        switch (message.action) {
+            case 'atualizar_pedidos':
+                atualizarPedidos();
+                break;
+            case 'pedidoPronto':
+                notificaPedidoPronto(message.params);
+                break;
+            default: console.log('Solicitação do servidor não processada:', message)
+        }
+
+    } else {
+        console.log('Mensagem do servidor:', message);
+    }
+}
+
+function notificaPedidoPronto(params){
+    console.log("pedido pronto");
+    if(params.numeroPedido){
+        alert(`O pedido ${params.numeroPedido} está pronto para ser retirado!`);
+    }
+}
+
+function atualizarPedidos(callback) {
+
+    console.log('atualizando pedidos');
+    
+
+    socket.emit('message', JSON.stringify({
+        "action": "pegarListaPedidos",
+        "params": {}
+    }), (respostaDoServidor) => {
+        let response = respostaDoServidor;
+        console.log(response);
+
+        if(response.params.listaPedidos !== undefined && typeof response.params.listaPedidos === 'object'){
+            this.listaPedidos = response.params.listaPedidos;
+            console.log('lista de pedidos atualizada');
+            if(callback){
+                callback();
+            }
+        }else{
+            console.log('Não foi possível atualizar a lista de pedidos');
+        }
+        
+    });
+
+}
 
 // ADICIONA UM ITEM A COMANDA A PARTIR DO IDENTIFICADOR
 function adicionarItemComanda(identificador) {
@@ -55,6 +149,7 @@ function atualizarTotal() {
 }
 
 function atualizarNumeroComanda() {
+    objetoComanda.setNumero(1);
     document.getElementById("numero-comanda").innerText = objetoComanda.getNumero();
 }
 
@@ -136,10 +231,10 @@ function removerAcentosEspeciais(str) {
     return str;
 }
 
-function carregaTelaComanda(){
+function carregaTelaComanda() {
     var box_itens = document.getElementById('itens_selecionados');
     let html = "";
-    objetoComanda.getItens().forEach(function(item){
+    objetoComanda.getItens().forEach(function (item) {
         html += `<tr class="table-body-row item_${item.id}">
             <td class="product-remove"><a href="#" title="Remover item" onclick="removerItemComanda(${item.id}); document.querySelector('.item_${item.id}').remove()"><i class="far fa-window-close"></i></a></td>
             <td class="product-image"><img src="app/img/products/${item.produto.imagem}" alt="">
@@ -154,57 +249,40 @@ function carregaTelaComanda(){
     document.getElementById('total_comanda').innerHTML = objetoComanda.getTotal();
 }
 
-function fazerPedido(){
-    if(objetoComanda.getItens().length > 0){
+function fazerPedido() {
+
+    if (objetoComanda.getItens().length > 0) {
 
         objetoPedido.adicionarComanda(objetoComanda);
-        objetoPedido.realizarPedido();
+        objetoPedido.mesa = 1; // TODO implementar numeração de mesas
 
+        socket.emit('message', JSON.stringify({
+            "action": "novoPedido",
+            "params": {
+                "pedido": objetoPedido
+            }
+        }), (respostaDoServidor) => {
+            if(respostaDoServidor === 'pedido_recebido'){
+                // remove o pedido do storage
+                localStorage.removeItem('pedido');
 
-        // adiciona pedido a lista de pedidos
-        listaPedidos.push(objetoPedido);
+                // remove a comanda do storage
+                localStorage.removeItem('comanda');
 
-        // atualiza a lista do pedidos no storage
-        localStorage.setItem('listaPedidos', JSON.stringify(listaPedidos));
+                // cria novos objetos vazios
+                comanda = new Comanda();
+                objetoPedido = new Pedido();
+                alert("Pedido realizado com sucesso!");
 
-        // remove o pedido do storage
-        localStorage.removeItem('pedido');
-
-        // remove a comanda do storage
-        localStorage.removeItem('comanda');
-        
-        // cria novos objetos vazios
-        comanda = new Comanda();
-        objetoPedido = new Pedido();
-        alert("Pedido realizado com sucesso!");
-        window.location = "./index.html";
+                // Abre a lista de pedidos
+                window.location = "./pedidos.html";
+            }
+            console.log('Resposta do servidor:', respostaDoServidor);
+        });
     }
 }
 
-
-function listarPedidosHtml(){
-    var box_pedido = document.getElementById('listagem_pedidos');
-    let html = "";
-    listaPedidos.forEach((pedido)=>{
-        html += `<tr class="table-body-row item_${pedido.numero}">
-            <td class="pedido-numero">${pedido.numero}</td>
-            <td class="pedido-hora">${pedido.datahora}</td>
-            <td class="pedido-mesa">${pedido.mesa}</td>
-            <td class="pedido-status">${pedido.status}</td>
-            <td class="pedido-opcoes">
-                <select>
-                    <option>Recebido</option>
-                    <option>Preparando</option>
-                    <option>Pronto</option>
-                    <option>Retirado</option>
-                </select>
-            </td>
-            </tr>`;
-    });
-    box_pedido.innerHTML = html;
-}
-
-function getDateHour(){
+function getDateHour() {
     var dataAtual = new Date();
 
     // Formata a data para exibição
@@ -237,3 +315,21 @@ function getDateHour(){
     // Monta a string da data no formato desejado (dd/mm/aaaa)
     return `${dia}-${mes}-${ano} ${horas}:${minutos}`;
 }
+
+function formatarValorParaReais(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+function atualizaStatusPedido(pedidoNumero, e){
+    console.log("Pedido " + pedidoNumero + " atualizado para: ", e.value);
+    socket.emit('message', JSON.stringify({
+        "action": "atualizarStatusPedido",
+        "params": {
+            "numeroPedido": pedidoNumero,
+            "status": e.value
+        }
+    }), (respostaDoServidor)=>{
+        alert(respostaDoServidor);
+    });
+}
+

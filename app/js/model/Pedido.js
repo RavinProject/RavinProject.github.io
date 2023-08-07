@@ -9,13 +9,6 @@ class Pedido {
 
     }
 
-    realizarPedido(){
-        // muda o status do pedido
-        this.status = "realizado";
-        // TODO criar a chamada a Api Rest que irá realizar o pedido no sistema
-    }
-
-
     // Função para adicionar uma comanda ao pedido
     adicionarComanda(comanda) {
         this.comanda = comanda;

@@ -1,13 +1,10 @@
 const { clientsConnected, tablesConnected, kitchenConnected, getIndexByConnection } = require('./connections');
 const utils = require('./utils');
-const Mesa = require('./Mesa');
-const Cozinha = require('./Cozinha');
 
 
 // Listas Constantes
-const listaMesa = [];
-const listaCozinha = [];
 const listaUsuarios = require('./UsersList');
+const listaPedidos = [];
 
 class Ravin {
 
@@ -21,15 +18,19 @@ class Ravin {
      * @param {*} socket é a conexão do cliente
      * @param {*} message é a mensagem recebida
      */
-    novaSolicitacao(socket, message){
-        console.log("Nova solicitação", message);
+    novaSolicitacao(socket, m, callback){
+
+        let message = JSON.parse(m);
+
         // Valida a solicitação
         if (message.action === undefined || message.action.trim() === '') {
+            console.log("Solicitação inválida!");
             this.notificaConexao(socket, "Solicitação inválida!");
             return;
         }
         // Valida os parametros
         if (message.params === undefined || typeof message.params != 'object') {
+            console.log("Parâmetros inválidos!");
             this.notificaConexao(socket, "Parâmetros inválidos!");
             return;
         }
@@ -39,7 +40,13 @@ class Ravin {
                 this.login(socket, message.params);
                 break;
             case "novoPedido":
-                this.novoPedido(socket, message.params);
+                this.novoPedido(socket, message.params, callback);
+                break;
+            case "pegarListaPedidos":
+                this.pegarListaProdutos(socket, callback);
+                break;
+            case "atualizarStatusPedido":
+                this.atualizarStatusPedido(message.params, socket, callback);
                 break;
             default:
                 this.notificaConexao(socket, "Não foi possível processar a solicitação.");
@@ -110,6 +117,25 @@ class Ravin {
     }
 
     /**
+     * Verifica qual usuário se reconectou e substitui o socket antigo pelo novo socket
+     * Isso impede que o usuário que atualizar a pagina ou navegar pelo site criar várias conexoes
+     * TODO não sei se é a melhor forma de impedir sessoes inativas, mas é importante para poder notificar os usuários corretos
+     * @param {*} socket 
+     */
+    usuarioSeReconectou(sessionId, socket){
+        listaUsuarios.forEach((u)=>{
+            for(let i=0; i < u.conexoes.length; i++){
+                let sock = u.conexoes[i];
+                let sockSessionID = sock.handshake.query.sessionId;
+                if(sockSessionID === sessionId){
+                    u.conexoes[i] = socket;
+                    break;
+                }
+            }
+        });
+    }
+
+    /**
      * Remove as conexões que estão inativas, não está funcionando como esperava
      * TODO Como fechar as conexoes ainda ativas que o usuário fecha o APP sem encerrar a conexão?
      */
@@ -153,12 +179,7 @@ class Ravin {
      */
     notificaConexao(socket, message){
         // TODO localizar a conexao alvo pelo index
-
         socket.emit('message', JSON.stringify(message));
-    }
-
-    notificaMesa(mesa, pedido){
-        this.notificaConexao(mesa.getSocket(), pedido);
     }
 
     /**
@@ -184,30 +205,97 @@ class Ravin {
         return mesa;
     }
 
-    novoPedido(socket, params){
+    /**
+     * Recebe um novo pedido:
+     * - altera o status do pedido para recebido
+     * - insere o pedido na lista de pedidos
+     * - atualiza a lista de pedidos nas sessoes conectadas
+     * @param {*} socket 
+     * @param {*} params 
+     */
+    novoPedido(socket, params, callback){
+    
+        let pedido = params.pedido
 
-        //TODO atualizar lista de pedidos e enviar para a cozinha
-        let mesa = this.selecionaMesa(socket);
-        if(mesa){
-            let pedido = mesa.novoPedido(params.pedido);
-            this.notificaMesa(mesa, pedido);
+        // Cria um número para o pedido
+        pedido.numero = listaPedidos.length + 1;
+
+        // Modifica o status para recebido
+        pedido.status = 'recebido';
+
+        // Adiciona a lista de pedidos
+        listaPedidos.push(pedido);
+
+        // Solicita a atualização dos pedidos aos usuários conectados
+        socket.emit("message", {
+            "action": "atualizar_pedidos",
+            "params": listaPedidos
+        });
+                
+        // Informa que ao socket que o pedido foi recebido
+        if(callback) callback("pedido_recebido");
+    }
+  
+    /**
+     * Retorna a lista de pedidos através de uma função de callback ou envia por mensagem ao cliente que a solicitou
+     * @param {*} socket 
+     * @param {*} callback 
+     */
+    pegarListaProdutos(socket, callback){
+        if(callback){
+            callback({
+                "action": "pegarListaPedidos",
+                "params": {
+                    "listaPedidos": listaPedidos
+                }
+            });
         }else{
-            console.log('mesa não localizada');
+            socket.emit('message', {
+                "action": "pegarListaPedidos",
+                "params": {
+                    "listaPedidos": listaPedidos
+                }
+            });    
         }
-
     }
 
-    notificarMesa(){
+    /**
+     * Atualiza o status do pedido com o status recebido da cozinha e notifica todos 
+     * @param {*} socket 
+     * @param {*} callback 
+     */
+    atualizarStatusPedido(params, socket, callback){
+        let numeroPedido = params.numeroPedido;
+        let status = params.status;
 
-        // TODO através na tela da cozinha a mesa poderá ser notificada que o pedido esta pronto
+        if(numeroPedido && status && callback){
+            listaPedidos.forEach((pedido)=>{
+                if(pedido.numero === numeroPedido){
+                    pedido.status = status;
+                }
+            });
+            callback(`O status do pedido ${numeroPedido} foi atualizado para ${status}`);
 
+            if(status === 'pronto'){
+                console.log("pedido pronto");
+                clientsConnected.forEach((c)=>{
+                    if(c.socket !== socket){
+                        console.log("notificando pedido pronto");
+                        c.socket.emit('message', {
+                            "action": "pedidoPronto",
+                            "params": {
+                                "numeroPedido": numeroPedido
+                            }
+                        });
+                    }
+                });
+
+            }
+        }else{
+            socket.emit("Não foi possível atualizar o status do pedido! Verifique os parametros informados.");
+        }
     }
 
-    fecharComanda(){
-
-        // TODO recebe a comanda e notifica a mesa
-
-    }
 
 
 }

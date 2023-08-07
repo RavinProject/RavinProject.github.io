@@ -53,7 +53,18 @@ if (cluster.isMaster) {
     });
 
     // Cria o servidor WebSocket associado ao servidor HTTP
-    const io = socketIo(server);
+    // const io = socketIo(server);
+
+    const io = socketIo(server, {
+        cors: {
+            origin: [
+                'http://localhost', 
+                'https://ravinproject.github.io/'
+            ],
+            methods: ["GET", "POST"]
+        }
+    });
+
 
     // Controlador da Aplicação
     const Ravin = require('./Ravin');
@@ -62,21 +73,44 @@ if (cluster.isMaster) {
     // Lidando com solicitações WebSocket recebidas
     io.on('connection', (socket) => {
 
-        clientsConnected.push(socket); // TODO por enquanto tenho dúvidas quanto a necessidade dessa lista, já que o RavinControler vai armazenar a lista de conexoes de cada usuário
-        
+        // A sessionId que o usuário tem gravada no localStorage do seu navegador
+        const sessionId = socket.handshake.query.sessionId;
+
+        let novaSessao = true;
+
+        // Caso já exista uma sessão anterior com o mesmo ID, substituí o socket de uma conexão já exitente na lista de clientes conectados
+        clientsConnected.forEach((client)=>{
+            if(client.sessionId = sessionId){
+                // console.log("sessão igual");
+                novaSessao = false;
+                client.socket = socket;
+                // Atualiza a relação da sessão/socket do usuário
+                RavinController.usuarioSeReconectou(sessionId, socket);
+                return;
+            }
+        });
+
+        if (novaSessao) {
+            console.log("Novo cliente conectado " + sessionId);
+            clientsConnected.push({
+                "sessionId": sessionId,
+                "socket": socket
+            }); 
+        }
+
         console.log(clientsConnected.length, "conexoes ativas");
 
-        socket.on('message', (message) => {
+        socket.on('message', (message, callback) => {
             
-            RavinController.novaSolicitacao(socket, message);
+            RavinController.novaSolicitacao(socket, message, callback);
             
         });
 
+        // Esse evento dispara cada vez que o usuário navega para outra página ou atualiza a página
         socket.on('disconnect', () => {
-
-            RavinController.usuarioSeDesconectou(socket);
 
         });
 
     });
+
 }

@@ -1,0 +1,15 @@
+version: '3'
+services:
+  apache:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./app:/usr/local/apache2/htdocs/app
+      - ./comanda.html:/usr/local/apache2/htdocs/comanda.html
+      - ./pedidos.html:/usr/local/apache2/htdocs/pedidos.html
+      - ./cozinha.html:/usr/local/apache2/htdocs/cozinha.html
+      - ./index.html:/usr/local/apache2/htdocs/index.html
+
