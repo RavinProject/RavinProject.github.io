@@ -5,6 +5,8 @@ var itensList = null; //itens recuperados da API
 var objetoComanda = new Comanda(); // Objeto javascript para controlar toda a lógica local referente aos dados de uma comanda
 var objetoPedido = new Pedido();
 var listaPedidos = [];
+const urlWebsocket = 'http://localhost';
+const portWebsocket = '8080';
 /** 
  * INICIALIZADORES GLOBAIS 
  * para todas as páginas da aplicação
@@ -15,9 +17,39 @@ var listaPedidos = [];
         atualizarNumeroComanda();
         pedido = JSON.parse(localStorage.getItem('listaPedidos'));
         listaPedidos = pedido != null ? pedido : listaPedidos;
+        startWebsocket();
     });
 }(jQuery));
 /** FIM */
+
+// SESSÃO WEBSOCKET
+
+function startWebsocket(){
+    // Obter o identificador de sessão do localStorage
+    const savedSocketId = localStorage.getItem('socketId');
+
+    // Reconectar usando o identificador de sessão
+    if (savedSocketId) {
+        const socket = io(`${urlWebsocket}:${portWebsocket}`, {
+            query: {
+                sessionId: savedSocketId
+            }
+        });
+    
+        // Lidar com eventos e continuar a interação com o servidor
+        socket.on('mensagem-do-servidor', (mensagem) => {
+            console.log('Mensagem do servidor:', mensagem);
+        });
+    }else{
+         // Conectar ao servidor Socket.IO
+         const socket = io(`${urlWebsocket}:${portWebsocket}`);
+
+         // Armazenar o identificador de sessão no localStorage
+         socket.on('connect', () => {
+             localStorage.setItem('socketId', socket.id);
+         });
+    }
+}
 
 // ADICIONA UM ITEM A COMANDA A PARTIR DO IDENTIFICADOR
 function adicionarItemComanda(identificador) {
@@ -157,27 +189,52 @@ function carregaTelaComanda(){
 function fazerPedido(){
     if(objetoComanda.getItens().length > 0){
 
-        objetoPedido.adicionarComanda(objetoComanda);
-        objetoPedido.realizarPedido();
+        etch(`http://api.npoint.io/c442d6ba06c605014033/`)
+        .then(response => response.json())
+        .then(data => {
+            itensList = data;
+            let html = "";
+            for (let categoria in data) {
+                if (data.hasOwnProperty(categoria)) {
+                    data[categoria].forEach(item => {
+                        html += getBoxItem(categoria, item);
+                    });
+                    adicionaFiltroCategoria(categoria);
+                }
+            }
+            box_itens.innerHTML = html;
+            // carrega os actions do template
+            loaderActions();
+            setTimeout(function () {
+                // isotop inner
+                $(".product-lists").isotope();
+            }, 500);
+            //
+            if (callback) callback();
+        })
+        .catch(error => console.log(error));
+
+        // objetoPedido.adicionarComanda(objetoComanda);
+        // objetoPedido.realizarPedido();
 
 
-        // adiciona pedido a lista de pedidos
-        listaPedidos.push(objetoPedido);
+        // // adiciona pedido a lista de pedidos
+        // listaPedidos.push(objetoPedido);
 
-        // atualiza a lista do pedidos no storage
-        localStorage.setItem('listaPedidos', JSON.stringify(listaPedidos));
+        // // atualiza a lista do pedidos no storage
+        // localStorage.setItem('listaPedidos', JSON.stringify(listaPedidos));
 
-        // remove o pedido do storage
-        localStorage.removeItem('pedido');
+        // // remove o pedido do storage
+        // localStorage.removeItem('pedido');
 
-        // remove a comanda do storage
-        localStorage.removeItem('comanda');
+        // // remove a comanda do storage
+        // localStorage.removeItem('comanda');
         
-        // cria novos objetos vazios
-        comanda = new Comanda();
-        objetoPedido = new Pedido();
-        alert("Pedido realizado com sucesso!");
-        window.location = "./index.html";
+        // // cria novos objetos vazios
+        // comanda = new Comanda();
+        // objetoPedido = new Pedido();
+        // alert("Pedido realizado com sucesso!");
+        // window.location = "./index.html";
     }
 }
 

@@ -1,13 +1,10 @@
 const { clientsConnected, tablesConnected, kitchenConnected, getIndexByConnection } = require('./connections');
 const utils = require('./utils');
-const Mesa = require('./Mesa');
-const Cozinha = require('./Cozinha');
 
 
 // Listas Constantes
-const listaMesa = [];
-const listaCozinha = [];
 const listaUsuarios = require('./UsersList');
+const listaPedidos = [];
 
 class Ravin {
 
@@ -110,6 +107,25 @@ class Ravin {
     }
 
     /**
+     * Verifica qual usuário se reconectou e substitui o socket antigo pelo novo socket
+     * Isso impede que o usuário que atualizar a pagina ou navegar pelo site criar várias conexoes
+     * TODO não sei se é a melhor forma de impedir sessoes inativas, mas é importante para poder notificar os usuários corretos
+     * @param {*} socket 
+     */
+    usuarioSeReconectou(sessionId, socket){
+        listaUsuarios.forEach((u)=>{
+            for(let i=0; i < u.conexoes.length; i++){
+                let sock = u.conexoes[i];
+                let sockSessionID = sock.handshake.query.sessionId;
+                if(sockSessionID === sessionId){
+                    u.conexoes[i] = socket;
+                    break;
+                }
+            }
+        });
+    }
+
+    /**
      * Remove as conexões que estão inativas, não está funcionando como esperava
      * TODO Como fechar as conexoes ainda ativas que o usuário fecha o APP sem encerrar a conexão?
      */
@@ -153,7 +169,6 @@ class Ravin {
      */
     notificaConexao(socket, message){
         // TODO localizar a conexao alvo pelo index
-
         socket.emit('message', JSON.stringify(message));
     }
 
@@ -184,8 +199,15 @@ class Ravin {
         return mesa;
     }
 
+    /**
+     * Recebe um novo pedido:
+     * - altera o status do pedido para recebido
+     * - insere o pedido na lista de pedidos
+     * - notifica a cozinha de que um novo pedido foi feito
+     * @param {*} socket 
+     * @param {*} params 
+     */
     novoPedido(socket, params){
-
         //TODO atualizar lista de pedidos e enviar para a cozinha
         let mesa = this.selecionaMesa(socket);
         if(mesa){
@@ -197,15 +219,15 @@ class Ravin {
 
     }
 
-    notificarMesa(){
+    
+    /**
+     * Recebe a alteração de status de um pedido:
+     * - altera o status do pedido
+     * - notifica a mesa da alteração do status do pedido
+     */
+    alterarStatusPedido(){
 
         // TODO através na tela da cozinha a mesa poderá ser notificada que o pedido esta pronto
-
-    }
-
-    fecharComanda(){
-
-        // TODO recebe a comanda e notifica a mesa
 
     }
 
