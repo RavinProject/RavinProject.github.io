@@ -25,7 +25,7 @@ var socket = null;
 
 // SESSÃO WEBSOCKET
 
-function startWebsocket(){
+function startWebsocket() {
     // Obter o identificador de sessão do localStorage
     const savedSocketId = localStorage.getItem('socketId');
 
@@ -36,10 +36,10 @@ function startWebsocket(){
                 sessionId: savedSocketId
             }
         });
-    
+
         // Lidar com eventos e continuar a interação com o servidor
-        socket.on('mensagem-do-servidor', (mensagem) => {
-            console.log('Mensagem do servidor:', mensagem);
+        socket.on('message', (message) => {
+            processaMensagemServidor(message);
         });
 
         // Evento antes do fechamento da página
@@ -47,15 +47,58 @@ function startWebsocket(){
             socket.emit('clienteFechouAbas'); // Enviar um aviso ao servidor
         });
 
-    }else{
-         // Conectar ao servidor Socket.IO
-         const socket = io(`${urlWebsocket}:${portWebsocket}`);
+    } else {
+        // Conectar ao servidor Socket.IO
+        const socket = io(`${urlWebsocket}:${portWebsocket}`);
 
-         // Armazenar o identificador de sessão no localStorage
-         socket.on('connect', () => {
-             localStorage.setItem('socketId', socket.id);
-         });
+        // Armazenar o identificador de sessão no localStorage
+        socket.on('connect', () => {
+            localStorage.setItem('socketId', socket.id);
+        });
     }
+}
+
+function processaMensagemServidor(message) {
+    if (message.action !== undefined
+        && message.action.trim() !== ''
+        && message.params !== undefined
+        && typeof message.params === 'object') {
+
+        switch (message.action) {
+            case 'atualizar_pedidos':
+                atualizarPedidos();
+                break;
+            default: console.log('Solicitação do servidor não processada:', message)
+        }
+
+    } else {
+        console.log('Mensagem do servidor:', message);
+    }
+}
+
+function atualizarPedidos() {
+
+    console.log('atualizando pedidos');
+    
+
+    socket.emit('message', JSON.stringify({
+        "action": "pegarListaPedidos",
+        "params": {}
+    }), (respostaDoServidor) => {
+        let response = respostaDoServidor;
+        console.log(response);
+
+        if(response.params.listaPedidos !== undefined && typeof response.params.listaPedidos === 'object'){
+            this.listaPedidos = response.params.listaPedidos;
+            console.log('lista de pedidos atualizada');
+            // atualiza a lista de pedidos da tela
+            listarPedidosHtml();
+        }else{
+            console.log('Não foi possível atualizar a lista de pedidos');
+        }
+        
+    });
+
 }
 
 // ADICIONA UM ITEM A COMANDA A PARTIR DO IDENTIFICADOR
@@ -175,10 +218,10 @@ function removerAcentosEspeciais(str) {
     return str;
 }
 
-function carregaTelaComanda(){
+function carregaTelaComanda() {
     var box_itens = document.getElementById('itens_selecionados');
     let html = "";
-    objetoComanda.getItens().forEach(function(item){
+    objetoComanda.getItens().forEach(function (item) {
         html += `<tr class="table-body-row item_${item.id}">
             <td class="product-remove"><a href="#" title="Remover item" onclick="removerItemComanda(${item.id}); document.querySelector('.item_${item.id}').remove()"><i class="far fa-window-close"></i></a></td>
             <td class="product-image"><img src="app/img/products/${item.produto.imagem}" alt="">
@@ -193,48 +236,43 @@ function carregaTelaComanda(){
     document.getElementById('total_comanda').innerHTML = objetoComanda.getTotal();
 }
 
-function fazerPedido(){
-    console.log("fazer pedidos");
-    if(objetoComanda.getItens().length > 0){
-        console.log("fazendo pedidos");
+function fazerPedido() {
+
+    if (objetoComanda.getItens().length > 0) {
+
         objetoPedido.adicionarComanda(objetoComanda);
+
+
         socket.emit('message', JSON.stringify({
             "action": "novoPedido",
             "params": {
                 "pedido": objetoPedido
             }
-        }));
-        
+        }), (respostaDoServidor) => {
+            if(respostaDoServidor === 'pedido_recebido'){
+                // remove o pedido do storage
+                localStorage.removeItem('pedido');
 
-        // objetoPedido.adicionarComanda(objetoComanda);
-        // objetoPedido.realizarPedido();
+                // remove a comanda do storage
+                localStorage.removeItem('comanda');
 
+                // cria novos objetos vazios
+                comanda = new Comanda();
+                objetoPedido = new Pedido();
+                alert("Pedido realizado com sucesso!");
 
-        // // adiciona pedido a lista de pedidos
-        // listaPedidos.push(objetoPedido);
-
-        // // atualiza a lista do pedidos no storage
-        // localStorage.setItem('listaPedidos', JSON.stringify(listaPedidos));
-
-        // // remove o pedido do storage
-        // localStorage.removeItem('pedido');
-
-        // // remove a comanda do storage
-        // localStorage.removeItem('comanda');
-        
-        // // cria novos objetos vazios
-        // comanda = new Comanda();
-        // objetoPedido = new Pedido();
-        // alert("Pedido realizado com sucesso!");
-        // window.location = "./index.html";
+                // Abre a lista de pedidos
+                window.location = "./pedidos.html";
+            }
+            console.log('Resposta do servidor:', respostaDoServidor);
+        });
     }
 }
 
-
-function listarPedidosHtml(){
+function listarPedidosHtml() {
     var box_pedido = document.getElementById('listagem_pedidos');
     let html = "";
-    listaPedidos.forEach((pedido)=>{
+    listaPedidos.forEach((pedido) => {
         html += `<tr class="table-body-row item_${pedido.numero}">
             <td class="pedido-numero">${pedido.numero}</td>
             <td class="pedido-hora">${pedido.datahora}</td>
@@ -253,7 +291,7 @@ function listarPedidosHtml(){
     box_pedido.innerHTML = html;
 }
 
-function getDateHour(){
+function getDateHour() {
     var dataAtual = new Date();
 
     // Formata a data para exibição

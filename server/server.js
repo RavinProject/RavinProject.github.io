@@ -100,9 +100,9 @@ if (cluster.isMaster) {
 
         console.log(clientsConnected.length, "conexoes ativas");
 
-        socket.on('message', (message) => {
-            console.log(message);
-            RavinController.novaSolicitacao(socket, message);
+        socket.on('message', (message, callback) => {
+            
+            RavinController.novaSolicitacao(socket, message, callback);
             
         });
 

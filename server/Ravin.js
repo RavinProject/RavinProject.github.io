@@ -18,15 +18,19 @@ class Ravin {
      * @param {*} socket é a conexão do cliente
      * @param {*} message é a mensagem recebida
      */
-    novaSolicitacao(socket, message){
-        console.log("Nova solicitação", message);
+    novaSolicitacao(socket, m, callback){
+
+        let message = JSON.parse(m);
+
         // Valida a solicitação
         if (message.action === undefined || message.action.trim() === '') {
+            console.log("Solicitação inválida!");
             this.notificaConexao(socket, "Solicitação inválida!");
             return;
         }
         // Valida os parametros
         if (message.params === undefined || typeof message.params != 'object') {
+            console.log("Parâmetros inválidos!");
             this.notificaConexao(socket, "Parâmetros inválidos!");
             return;
         }
@@ -36,7 +40,10 @@ class Ravin {
                 this.login(socket, message.params);
                 break;
             case "novoPedido":
-                this.novoPedido(socket, message.params);
+                this.novoPedido(socket, message.params, callback);
+                break;
+            case "pegarListaPedidos":
+                this.pegarListaProdutos(socket, callback);
                 break;
             default:
                 this.notificaConexao(socket, "Não foi possível processar a solicitação.");
@@ -203,20 +210,28 @@ class Ravin {
      * Recebe um novo pedido:
      * - altera o status do pedido para recebido
      * - insere o pedido na lista de pedidos
-     * - notifica a cozinha de que um novo pedido foi feito
+     * - atualiza a lista de pedidos nas sessoes conectadas
      * @param {*} socket 
      * @param {*} params 
      */
-    novoPedido(socket, params){
-        //TODO atualizar lista de pedidos e enviar para a cozinha
-        let mesa = this.selecionaMesa(socket);
-        if(mesa){
-            let pedido = mesa.novoPedido(params.pedido);
-            this.notificaMesa(mesa, pedido);
-        }else{
-            console.log('mesa não localizada');
-        }
+    novoPedido(socket, params, callback){
+    
+        let pedido = params.pedido
 
+        // Modifica o status para recebido
+        pedido.status = 'recebido';
+
+        // Adiciona a lista de pedidos
+        listaPedidos.push(pedido);
+
+        // Solicita a atualização dos pedidos aos usuários conectados
+        socket.emit("message", {
+            "action": "atualizar_pedidos",
+            "params": listaPedidos
+        });
+                
+        // Informa que ao socket que o pedido foi recebido
+        if(callback) callback("pedido_recebido");
     }
 
     
@@ -231,7 +246,28 @@ class Ravin {
 
     }
 
-
+    /**
+     * Retorna a lista de pedidos através de uma função de callback ou envia por mensagem ao cliente que a solicitou
+     * @param {*} socket 
+     * @param {*} callback 
+     */
+    pegarListaProdutos(socket, callback){
+        if(callback){
+            callback({
+                "action": "pegarListaPedidos",
+                "params": {
+                    "listaPedidos": listaPedidos
+                }
+            });
+        }else{
+            socket.emit('message', {
+                "action": "pegarListaPedidos",
+                "params": {
+                    "listaPedidos": listaPedidos
+                }
+            });    
+        }
+    }
 }
 
 module.exports = Ravin;
