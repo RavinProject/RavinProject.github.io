@@ -53,7 +53,18 @@ if (cluster.isMaster) {
     });
 
     // Cria o servidor WebSocket associado ao servidor HTTP
-    const io = socketIo(server);
+    // const io = socketIo(server);
+
+    const io = socketIo(server, {
+        cors: {
+            origin: [
+                'http://localhost', 
+                'https://ravinproject.github.io/'
+            ],
+            methods: ["GET", "POST"]
+        }
+    });
+
 
     // Controlador da Aplicação
     const Ravin = require('./Ravin');
