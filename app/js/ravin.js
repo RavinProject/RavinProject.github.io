@@ -40,6 +40,12 @@ function startWebsocket(){
         socket.on('mensagem-do-servidor', (mensagem) => {
             console.log('Mensagem do servidor:', mensagem);
         });
+
+        // Evento antes do fechamento da página
+        window.addEventListener('beforeunload', () => {
+            socket.emit('clienteFechouAbas'); // Enviar um aviso ao servidor
+        });
+
     }else{
          // Conectar ao servidor Socket.IO
          const socket = io(`${urlWebsocket}:${portWebsocket}`);

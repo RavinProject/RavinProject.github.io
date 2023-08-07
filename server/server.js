@@ -73,8 +73,31 @@ if (cluster.isMaster) {
     // Lidando com solicitações WebSocket recebidas
     io.on('connection', (socket) => {
 
-        clientsConnected.push(socket); // TODO por enquanto tenho dúvidas quanto a necessidade dessa lista, já que o RavinControler vai armazenar a lista de conexoes de cada usuário
-        
+        // A sessionId que o usuário tem gravada no localStorage do seu navegador
+        const sessionId = socket.handshake.query.sessionId;
+
+        let novaSessao = true;
+
+        // Caso já exista uma sessão anterior com o mesmo ID, substituí o socket de uma conexão já exitente na lista de clientes conectados
+        clientsConnected.forEach((client)=>{
+            if(client.sessionId = sessionId){
+                // console.log("sessão igual");
+                novaSessao = false;
+                client.socket = socket;
+                // Atualiza a relação da sessão/socket do usuário
+                RavinController.usuarioSeReconectou(sessionId, socket);
+                return;
+            }
+        });
+
+        if (novaSessao) {
+            console.log("Novo cliente conectado " + sessionId);
+            clientsConnected.push({
+                "sessionId": sessionId,
+                "socket": socket
+            }); 
+        }
+
         console.log(clientsConnected.length, "conexoes ativas");
 
         socket.on('message', (message) => {
@@ -83,11 +106,11 @@ if (cluster.isMaster) {
             
         });
 
+        // Esse evento dispara cada vez que o usuário navega para outra página ou atualiza a página
         socket.on('disconnect', () => {
-
-            RavinController.usuarioSeDesconectou(socket);
 
         });
 
     });
+
 }
