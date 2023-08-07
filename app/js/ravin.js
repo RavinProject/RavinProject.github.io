@@ -146,7 +146,7 @@ function carregaTelaComanda(){
             </td>
             <td class="product-name">${item.produto.nome}</td>
             <td class="product-price">${item.produto.valor}</td>
-            <td class="product-quantity"><input type="number" placeholder="${item.quantidade}"></td>
+            <td class="product-quantity"><input type="number" disabled="dosabled" placeholder="${item.quantidade}"></td>
             <td class="product-total">${item.total}</td>
             </tr>`;
     });
@@ -176,8 +176,64 @@ function fazerPedido(){
         // cria novos objetos vazios
         comanda = new Comanda();
         objetoPedido = new Pedido();
-
-        alert("Pedido realizado com suscesso!");
+        alert("Pedido realizado com sucesso!");
         window.location = "./index.html";
     }
+}
+
+
+function listarPedidosHtml(){
+    var box_pedido = document.getElementById('listagem_pedidos');
+    let html = "";
+    listaPedidos.forEach((pedido)=>{
+        html += `<tr class="table-body-row item_${pedido.numero}">
+            <td class="pedido-numero">${pedido.numero}</td>
+            <td class="pedido-hora">${pedido.datahora}</td>
+            <td class="pedido-mesa">${pedido.mesa}</td>
+            <td class="pedido-status">${pedido.status}</td>
+            <td class="pedido-opcoes">
+                <select>
+                    <option>Recebido</option>
+                    <option>Preparando</option>
+                    <option>Pronto</option>
+                    <option>Retirado</option>
+                </select>
+            </td>
+            </tr>`;
+    });
+    box_pedido.innerHTML = html;
+}
+
+function getDateHour(){
+    var dataAtual = new Date();
+
+    // Formata a data para exibição
+    var dia = dataAtual.getDate();
+    var mes = dataAtual.getMonth() + 1; // Os meses em JavaScript são base 0, então adicionamos 1
+    var ano = dataAtual.getFullYear();
+
+    // Formatação para adicionar zero à esquerda se for necessário
+    if (dia < 10) {
+        dia = '0' + dia;
+    }
+
+    if (mes < 10) {
+        mes = '0' + mes;
+    }
+
+    // Obtém a hora e os minutos
+    var horas = dataAtual.getHours();
+    var minutos = dataAtual.getMinutes();
+
+    // Formatação para adicionar zero à esquerda se necessário
+    if (horas < 10) {
+        horas = '0' + horas;
+    }
+
+    if (minutos < 10) {
+        minutos = '0' + minutos;
+    }
+
+    // Monta a string da data no formato desejado (dd/mm/aaaa)
+    return `${dia}-${mes}-${ano} ${horas}:${minutos}`;
 }
