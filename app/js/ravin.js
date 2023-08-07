@@ -5,8 +5,8 @@ var itensList = null; //itens recuperados da API
 var objetoComanda = new Comanda(); // Objeto javascript para controlar toda a lógica local referente aos dados de uma comanda
 var objetoPedido = new Pedido();
 var listaPedidos = [];
-const urlWebsocket = 'http://localhost';
-const portWebsocket = '8080';
+const urlWebsocket = window.location.hostname === 'localhost' ? 'localhost' : 'ravinproject.github.io';
+const portWebsocket = window.location.hostname === 'localhost' ? '8080' : '80';
 var socket = null;
 /** 
  * INICIALIZADORES GLOBAIS 
@@ -68,6 +68,9 @@ function processaMensagemServidor(message) {
             case 'atualizar_pedidos':
                 atualizarPedidos();
                 break;
+            case 'pedidoPronto':
+                notificaPedidoPronto(message.params);
+                break;
             default: console.log('Solicitação do servidor não processada:', message)
         }
 
@@ -76,7 +79,14 @@ function processaMensagemServidor(message) {
     }
 }
 
-function atualizarPedidos() {
+function notificaPedidoPronto(params){
+    console.log("pedido pronto");
+    if(params.numeroPedido){
+        alert(`O pedido ${params.numeroPedido} está pronto para ser retirado!`);
+    }
+}
+
+function atualizarPedidos(callback) {
 
     console.log('atualizando pedidos');
     
@@ -91,8 +101,9 @@ function atualizarPedidos() {
         if(response.params.listaPedidos !== undefined && typeof response.params.listaPedidos === 'object'){
             this.listaPedidos = response.params.listaPedidos;
             console.log('lista de pedidos atualizada');
-            // atualiza a lista de pedidos da tela
-            listarPedidosHtml();
+            if(callback){
+                callback();
+            }
         }else{
             console.log('Não foi possível atualizar a lista de pedidos');
         }
@@ -137,6 +148,7 @@ function atualizarTotal() {
 }
 
 function atualizarNumeroComanda() {
+    objetoComanda.setNumero(1);
     document.getElementById("numero-comanda").innerText = objetoComanda.getNumero();
 }
 
@@ -241,7 +253,7 @@ function fazerPedido() {
     if (objetoComanda.getItens().length > 0) {
 
         objetoPedido.adicionarComanda(objetoComanda);
-
+        objetoPedido.mesa = 1; // TODO implementar numeração de mesas
 
         socket.emit('message', JSON.stringify({
             "action": "novoPedido",
@@ -267,28 +279,6 @@ function fazerPedido() {
             console.log('Resposta do servidor:', respostaDoServidor);
         });
     }
-}
-
-function listarPedidosHtml() {
-    var box_pedido = document.getElementById('listagem_pedidos');
-    let html = "";
-    listaPedidos.forEach((pedido) => {
-        html += `<tr class="table-body-row item_${pedido.numero}">
-            <td class="pedido-numero">${pedido.numero}</td>
-            <td class="pedido-hora">${pedido.datahora}</td>
-            <td class="pedido-mesa">${pedido.mesa}</td>
-            <td class="pedido-status">${pedido.status}</td>
-            <td class="pedido-opcoes">
-                <select>
-                    <option>Recebido</option>
-                    <option>Preparando</option>
-                    <option>Pronto</option>
-                    <option>Retirado</option>
-                </select>
-            </td>
-            </tr>`;
-    });
-    box_pedido.innerHTML = html;
 }
 
 function getDateHour() {
@@ -324,3 +314,21 @@ function getDateHour() {
     // Monta a string da data no formato desejado (dd/mm/aaaa)
     return `${dia}-${mes}-${ano} ${horas}:${minutos}`;
 }
+
+function formatarValorParaReais(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+function atualizaStatusPedido(pedidoNumero, e){
+    console.log("Pedido " + pedidoNumero + " atualizado para: ", e.value);
+    socket.emit('message', JSON.stringify({
+        "action": "atualizarStatusPedido",
+        "params": {
+            "numeroPedido": pedidoNumero,
+            "status": e.value
+        }
+    }), (respostaDoServidor)=>{
+        alert(respostaDoServidor);
+    });
+}
+

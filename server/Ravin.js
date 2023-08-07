@@ -45,6 +45,9 @@ class Ravin {
             case "pegarListaPedidos":
                 this.pegarListaProdutos(socket, callback);
                 break;
+            case "atualizarStatusPedido":
+                this.atualizarStatusPedido(message.params, socket, callback);
+                break;
             default:
                 this.notificaConexao(socket, "Não foi possível processar a solicitação.");
         }
@@ -179,10 +182,6 @@ class Ravin {
         socket.emit('message', JSON.stringify(message));
     }
 
-    notificaMesa(mesa, pedido){
-        this.notificaConexao(mesa.getSocket(), pedido);
-    }
-
     /**
      * Envia uma notificação para todas as instâncias de conexão de um usuario
      * @param {*} usuario 
@@ -218,6 +217,9 @@ class Ravin {
     
         let pedido = params.pedido
 
+        // Cria um número para o pedido
+        pedido.numero = listaPedidos.length + 1;
+
         // Modifica o status para recebido
         pedido.status = 'recebido';
 
@@ -233,19 +235,7 @@ class Ravin {
         // Informa que ao socket que o pedido foi recebido
         if(callback) callback("pedido_recebido");
     }
-
-    
-    /**
-     * Recebe a alteração de status de um pedido:
-     * - altera o status do pedido
-     * - notifica a mesa da alteração do status do pedido
-     */
-    alterarStatusPedido(){
-
-        // TODO através na tela da cozinha a mesa poderá ser notificada que o pedido esta pronto
-
-    }
-
+  
     /**
      * Retorna a lista de pedidos através de uma função de callback ou envia por mensagem ao cliente que a solicitou
      * @param {*} socket 
@@ -268,6 +258,46 @@ class Ravin {
             });    
         }
     }
+
+    /**
+     * Atualiza o status do pedido com o status recebido da cozinha e notifica todos 
+     * @param {*} socket 
+     * @param {*} callback 
+     */
+    atualizarStatusPedido(params, socket, callback){
+        let numeroPedido = params.numeroPedido;
+        let status = params.status;
+
+        if(numeroPedido && status && callback){
+            listaPedidos.forEach((pedido)=>{
+                if(pedido.numero === numeroPedido){
+                    pedido.status = status;
+                }
+            });
+            callback(`O status do pedido ${numeroPedido} foi atualizado para ${status}`);
+
+            if(status === 'pronto'){
+                console.log("pedido pronto");
+                clientsConnected.forEach((c)=>{
+                    if(c.socket !== socket){
+                        console.log("notificando pedido pronto");
+                        c.socket.emit('message', {
+                            "action": "pedidoPronto",
+                            "params": {
+                                "numeroPedido": numeroPedido
+                            }
+                        });
+                    }
+                });
+
+            }
+        }else{
+            socket.emit("Não foi possível atualizar o status do pedido! Verifique os parametros informados.");
+        }
+    }
+
+
+
 }
 
 module.exports = Ravin;

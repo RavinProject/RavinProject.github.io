@@ -168,8 +168,7 @@
 									<th class="pedido-numero">Número</th>
 									<th class="pedido-hora">Hora</th>
 									<th class="pedido-mesa">Mesa</th>
-									<th class="pedido-status">Status</th>
-									<th class="pedido-opcoes">Opções</th>
+									<th class="pedido-opcoes">Alterar Status</th>
 								</tr>
 							</thead>
 							<tbody id="listagem_pedidos">
@@ -222,8 +221,28 @@
 	<script>
 		// SCRIPTS ESPECÍFICOS PARA ESTA PÁGINA
 		$(document).ready(function ($) {
-			listarPedidosHtml();
+			atualizarPedidos(listarPedidosHtml);
 		});
+
+		function listarPedidosHtml() {
+			var box_pedido = document.getElementById('listagem_pedidos');
+			let html = "";
+			listaPedidos.forEach((pedido) => {
+				html += `<tr class="table-body-row item_${pedido.numero}">
+            <td class="pedido-numero">${pedido.numero}</td>
+            <td class="pedido-hora">${pedido.datahora}</td>
+            <td class="pedido-mesa">${pedido.mesa}</td>
+            <td class="pedido-opcoes">
+                <select onchange="atualizaStatusPedido(${pedido.numero}, this)">
+                    <option value='recebido' ${pedido.status == 'recebido' ? 'selected' : ''}>Recebido</option>
+                    <option value='preparando' ${pedido.status == 'preparando' ? 'selected' : ''}>Preparando</option>
+                    <option value='retirado' ${pedido.status == 'retirado' ? 'selected' : ''}>Retirado</option>
+                </select>
+            </td>
+            </tr>`;
+			});
+			box_pedido.innerHTML = html;
+		}
 	</script>
 </body>
 
