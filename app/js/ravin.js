@@ -146,7 +146,7 @@ function carregaTelaComanda(){
             </td>
             <td class="product-name">${item.produto.nome}</td>
             <td class="product-price">${item.produto.valor}</td>
-            <td class="product-quantity"><input type="number" disabled="dosabled" placeholder="${item.quantidade}"></td>
+            <td class="product-quantity"><input type="number" disabled="disabled" placeholder="${item.quantidade}"></td>
             <td class="product-total">${item.total}</td>
             </tr>`;
     });
