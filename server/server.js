@@ -76,8 +76,6 @@ if (cluster.isMaster) {
         // A sessionId que o usuário tem gravada no localStorage do seu navegador
         const sessionId = socket.handshake.query.sessionId;
 
-        console.log("Nova sessionId", sessionId);
-
         // No primeira acesso a sessionId é undefined
         let sessaoExistente = sessionId === undefined ? false : true;
 
@@ -102,12 +100,15 @@ if (cluster.isMaster) {
                 }
             }
             if(!existeNoArray){
+                console.log("Cliente reconectado (2)", sessionId);
                 clientsConnected.push({
                     "sessionId": sessionId,
                     "socket": socket
                 }); 
             }
         }
+
+
 
         clientsConnected.forEach((c)=>{
             console.log("sessionId", c.sessionId, "sockerId", c.socket.id);
