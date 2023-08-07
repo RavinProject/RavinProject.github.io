@@ -6,7 +6,7 @@ var objetoComanda = new Comanda(); // Objeto javascript para controlar toda a l√
 var objetoPedido = new Pedido();
 var listaPedidos = [];
 var serverAWS = true;
-const urlWebsocket = window.location.hostname === 'localhost' && !serverAWS ? 'localhost' : 'ravin-project.eba-u8hvijwt.sa-east-1.elasticbeanstalk.com';
+const urlWebsocket = window.location.hostname === 'localhost' && !serverAWS ? 'localhost' : 'https://ravin-project.eba-u8hvijwt.sa-east-1.elasticbeanstalk.com';
 const portWebsocket = window.location.hostname === 'localhost' && !serverAWS ? '8080' : '80';
 var socket = null;
 /** 
