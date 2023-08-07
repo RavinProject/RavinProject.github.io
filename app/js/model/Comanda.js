@@ -1,9 +1,9 @@
 class Comanda {
     constructor() {
         // ESTRUTURA DOS DADOS DA COMANDA E SEUS ITENS
-        this.comanda = {
-            numero: 0,
-            itens: [
+
+            this.numero = 0,
+            this.itens = [
                 { // item importante apenas para demonstração da estrutura de dados, é sobrescrito ou zerado logo em seguida
                     id: 0,
                     produto: {
@@ -17,28 +17,27 @@ class Comanda {
                     quantidade: 0,
                     total: 0
                 }
-            ],
-            total: 0
-        };
+            ];
+            this.total = 0;
 
         //inicializa com os valores armazenados no storage (se houver) ao carregar a aplicação
         const data = this.recuperaComandaStorage();
         if (data !== null) {
-            this.comanda = data;
+            this.numero = data.numero;
+            this.itens = data.itens;
+            this.total = data.total;
         } else {
             //comanda vazia se não houver dados anteriores
-            this.comanda = {
-                numero: 0,
-                itens: [],
-                total: 0
-            };
+            this.numero = 0;
+            this.itens = [];
+            this.total = 0;
         }
 
     }
 
     // retorna a lista de itens da comanda
     getItens(){
-        return this.comanda.itens;
+        return this.itens;
     }
 
     /**
@@ -55,7 +54,7 @@ class Comanda {
      *                   se a lista de itens estiver vazia.
      */
     encontrarMaiorId() {
-        return Math.max(0, ...this.comanda.itens.map(produto => produto.id));
+        return Math.max(0, ...this.itens.map(produto => produto.id));
     }
 
     // Função para gerar o próximo ID baseado no maior ID existente na lista de itens
@@ -72,19 +71,19 @@ class Comanda {
             quantidade: quantidade,
             total: quantidade * produto.valor
         };
-        this.comanda.itens.push(item);
-        this.comanda.total += item.total;
-        this.atualizaStorage(this.comanda);
+        this.itens.push(item);
+        this.total += item.total;
+        this.atualizaStorage(this);
     }
 
     // Função para remover um item da comanda pelo ID
     removerItem(produtoId) {
-        const index = this.comanda.itens.findIndex(produto => produto.id === produtoId);
+        const index = this.itens.findIndex(produto => produto.id === produtoId);
         if (index > -1) {
-            const item = this.comanda.itens[index];
-            this.comanda.total -= item.total;
-            this.comanda.itens.splice(index, 1);
-            this.atualizaStorage(this.comanda);
+            const item = this.itens[index];
+            this.total -= item.total;
+            this.itens.splice(index, 1);
+            this.atualizaStorage(this);
         }
     }
 
@@ -100,18 +99,18 @@ class Comanda {
 
     // Função para obter o total da comanda
     getTotal() {
-        return this.comanda.total.toFixed(2); // To fixed para por duas casas decimais
+        return this.total.toFixed(2); // To fixed para por duas casas decimais
     }
 
     // Função para setar o número da comanda
     setNumero(numero) {
-        this.comanda.numero = numero;
-        this.atualizaStorage(this.comanda);
+        this.numero = numero;
+        this.atualizaStorage(this);
     }
 
     // Função para obter o número da comanda
     getNumero() {
-        return this.comanda.numero;
+        return this.numero;
     }
 
     // Função para imprimir os dados da comanda no console

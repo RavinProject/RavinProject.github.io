@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<!-- title -->
-	<title>Comanda - Ravin Project</title>
+	<title>Pedidos - Ravin Project</title>
 
 	<!-- favicon -->
 	<link rel="shortcut icon" type="image/png" href="app/img/favicon.png">
@@ -33,6 +33,11 @@
 	<!-- Menu lateral colapsável -->
 	<link rel="stylesheet" href="app/fonts/icomoon/style.css">
 	<link rel="stylesheet" href="app/css/style.css">
+	<style>
+		.pedidos th{
+			font-weight: bold !important;
+		}
+	</style>
 </head>
 
 <body>
@@ -143,7 +148,7 @@
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
 						<p>Coma bem, viva bem!</p>
-						<h1>Comanda</h1>
+						<h1>Pedidos</h1>
 					</div>
 				</div>
 			</div>
@@ -159,28 +164,17 @@
 					<div class="cart-table-wrap">
 						<table class="cart-table">
 							<thead class="cart-table-head">
-								<tr class="table-head-row">
-									<th class="product-remove"></th>
-									<th class="product-image"></th>
-									<th class="product-name">Item</th>
-									<th class="product-price">Preço</th>
-									<th class="product-quantity">Quantidade</th>
-									<th class="product-total">Total</th>
+								<tr class="table-head-row pedidos">
+									<th class="pedido-numero">Número</th>
+									<th class="pedido-hora">Hora</th>
+									<th class="pedido-mesa">Mesa</th>
+									<th class="pedido-status">Status</th>
+									<th class="pedido-opcoes">Opções</th>
 								</tr>
 							</thead>
-							<tbody id="itens_selecionados">
+							<tbody id="listagem_pedidos">
 							</tbody>
 						</table>
-					</div>
-				</div>
-
-				<div class="col-lg-4">
-					<div class="total-section">
-						<h4> Total: <span id="total_comanda">R$ 0,00</div></h4>
-						<div class="cart-buttons">
-							<a href="#" class="boxed-btn" onclick="fazerPedido()">Fazer pedido</a>
-							<!-- <a href="checkout.html" class="boxed-btn black">Check Out</a> -->
-						</div>
 					</div>
 				</div>
 			</div>
@@ -226,7 +220,7 @@
 	<script>
 		// SCRIPTS ESPECÍFICOS PARA ESTA PÁGINA
 		$(document).ready(function ($) {
-			carregaTelaComanda();
+			listarPedidosHtml();
 		});
 	</script>
 </body>
