@@ -76,29 +76,44 @@ if (cluster.isMaster) {
         // A sessionId que o usuário tem gravada no localStorage do seu navegador
         const sessionId = socket.handshake.query.sessionId;
 
-        let novaSessao = true;
+        console.log("Nova sessionId", sessionId);
 
-        // Caso já exista uma sessão anterior com o mesmo ID, substituí o socket de uma conexão já exitente na lista de clientes conectados
-        clientsConnected.forEach((client)=>{
-            if(client.sessionId = sessionId){
-                // console.log("sessão igual");
-                novaSessao = false;
-                client.socket = socket;
-                // Atualiza a relação da sessão/socket do usuário
-                RavinController.usuarioSeReconectou(sessionId, socket);
-                return;
-            }
-        });
+        // No primeira acesso a sessionId é undefined
+        let sessaoExistente = sessionId === undefined ? false : true;
 
-        if (novaSessao) {
+        if(sessionId === undefined){
             console.log("Novo cliente conectado " + sessionId);
+            // clientsConnected[sessionId] = socket;
             clientsConnected.push({
-                "sessionId": sessionId,
+                "sessionId": socket.id,
                 "socket": socket
             }); 
+        }else{
+            console.log("Sessao preexistente");
+            let existeNoArray = false;
+            // Caso já exista uma sessão anterior com o mesmo ID, substituí o socket de uma conexão já exitente na lista de clientes conectados
+            for(let i = 0; i < clientsConnected.length; i++){
+                if(clientsConnected[i].sessionId == sessionId){
+                    console.log("Cliente reconectado (1)", sessionId);
+                    existeNoArray = true;
+                    clientsConnected[i].socket = socket;
+                    // Atualiza a relação da sessão/socket do usuário
+                    RavinController.usuarioSeReconectou(sessionId, clientsConnected[i].socket);
+                }
+            }
+            if(!existeNoArray){
+                clientsConnected.push({
+                    "sessionId": sessionId,
+                    "socket": socket
+                }); 
+            }
         }
 
-        console.log(clientsConnected.length, "conexoes ativas");
+        clientsConnected.forEach((c)=>{
+            console.log("sessionId", c.sessionId, "sockerId", c.socket.id);
+        });
+
+        console.log(clientsConnected.length, "conectados");
 
         socket.on('message', (message, callback) => {
             

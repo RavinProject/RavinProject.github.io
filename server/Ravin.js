@@ -278,7 +278,9 @@ class Ravin {
 
             if(status === 'pronto'){
                 console.log("pedido pronto");
+                console.log(clientsConnected.length);
                 clientsConnected.forEach((c)=>{
+                    console.log("socket id:", c.socket.id);
                     if(c.socket !== socket){
                         console.log("notificando pedido pronto");
                         c.socket.emit('message', {
