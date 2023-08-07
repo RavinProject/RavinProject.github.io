@@ -5,7 +5,7 @@ var itensList = null; //itens recuperados da API
 var objetoComanda = new Comanda(); // Objeto javascript para controlar toda a lógica local referente aos dados de uma comanda
 var objetoPedido = new Pedido();
 var listaPedidos = [];
-var serverAWS = true;
+var serverAWS = false;
 const urlWebsocket = window.location.hostname === 'localhost' && !serverAWS ? 'localhost' : 'ravin-project.eba-u8hvijwt.sa-east-1.elasticbeanstalk.com';
 const portWebsocket = window.location.hostname === 'localhost' && !serverAWS ? '8080' : '80';
 var socket = null;
