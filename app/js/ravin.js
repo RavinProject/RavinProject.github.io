@@ -7,6 +7,7 @@ var objetoPedido = new Pedido();
 var listaPedidos = [];
 const urlWebsocket = 'http://localhost';
 const portWebsocket = '8080';
+var socket = null;
 /** 
  * INICIALIZADORES GLOBAIS 
  * para todas as páginas da aplicação
@@ -30,7 +31,7 @@ function startWebsocket(){
 
     // Reconectar usando o identificador de sessão
     if (savedSocketId) {
-        const socket = io(`${urlWebsocket}:${portWebsocket}`, {
+        socket = io(`${urlWebsocket}:${portWebsocket}`, {
             query: {
                 sessionId: savedSocketId
             }
@@ -193,32 +194,17 @@ function carregaTelaComanda(){
 }
 
 function fazerPedido(){
+    console.log("fazer pedidos");
     if(objetoComanda.getItens().length > 0){
-
-        etch(`http://api.npoint.io/c442d6ba06c605014033/`)
-        .then(response => response.json())
-        .then(data => {
-            itensList = data;
-            let html = "";
-            for (let categoria in data) {
-                if (data.hasOwnProperty(categoria)) {
-                    data[categoria].forEach(item => {
-                        html += getBoxItem(categoria, item);
-                    });
-                    adicionaFiltroCategoria(categoria);
-                }
+        console.log("fazendo pedidos");
+        objetoPedido.adicionarComanda(objetoComanda);
+        socket.emit('message', JSON.stringify({
+            "action": "novoPedido",
+            "params": {
+                "pedido": objetoPedido
             }
-            box_itens.innerHTML = html;
-            // carrega os actions do template
-            loaderActions();
-            setTimeout(function () {
-                // isotop inner
-                $(".product-lists").isotope();
-            }, 500);
-            //
-            if (callback) callback();
-        })
-        .catch(error => console.log(error));
+        }));
+        
 
         // objetoPedido.adicionarComanda(objetoComanda);
         // objetoPedido.realizarPedido();
