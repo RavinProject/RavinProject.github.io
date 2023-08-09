@@ -47,7 +47,7 @@ if (cluster.isMaster) {
 
 
     // Cria o servidor HTTP para lidar com solicitações que não são do WebSocket
-    const server = https.createServer((request, response) => {
+    const server = https.createServer(options, (request, response) => {
         console.log((new Date()) + ' Recebida requisição para ' + request.url);
         response.writeHead(200); // TODO Por enquanto não consegui trocar a porta no AWS, ela faz checagem na 80 para verificar se está retornando o código 200
         response.end();
