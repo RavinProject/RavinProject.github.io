@@ -29,19 +29,25 @@ if (cluster.isMaster) {
     const port = 3000;
 
     // Importando as bibliotecas necessárias
-    const http = require('http');
+    const fs = require('fs');
+    const https = require('https');
     const socketIo = require('socket.io');
     require('dotenv').config();
+
 
     // Imports de módulos locais
     const { clientsConnected, getIndexByConnection } = require('./connections');
     const utils = require('./utils');
     const handlers = require('./handlers');
 
+    const options = {
+        cert: fs.readFileSync('/etc/letsencrypt/live/vps48753.publiccloud.com.br/fullchain.pem'),
+        key: fs.readFileSync('/etc/letsencrypt/live/vps48753.publiccloud.com.br/privkey.pem')
+    };
 
 
     // Cria o servidor HTTP para lidar com solicitações que não são do WebSocket
-    const server = http.createServer((request, response) => {
+    const server = https.createServer((request, response) => {
         console.log((new Date()) + ' Recebida requisição para ' + request.url);
         response.writeHead(200); // TODO Por enquanto não consegui trocar a porta no AWS, ela faz checagem na 80 para verificar se está retornando o código 200
         response.end();
@@ -59,7 +65,7 @@ if (cluster.isMaster) {
         cors: {
             origin: [
                 'http://localhost', 
-                'https://ravinproject.github.io/',
+                'https://ravinproject.github.io',
                 'http://vps48753.publiccloud.com.br',
                 'https://vps48753.publiccloud.com.br'
             ],

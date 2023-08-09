@@ -8,6 +8,7 @@
     "ejs": "latest",
     "express": "latest",
     "http": "latest",
+    "https": "latest",
     "socket.io": "latest"
   },
   "scripts": {
