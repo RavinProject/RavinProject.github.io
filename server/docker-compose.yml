@@ -1,0 +1,11 @@
+version: '3'
+services:
+  node-app:
+    image: node:14   # Use a versão desejada do Node.js
+    container_name: ravin-websocket
+    working_dir: /app
+    volumes:
+      - ./app:/app   # Mapeia o diretório local "app" para o diretório dentro do contêiner "/app"
+    ports:
+      - "3000:3000"   # Mapeia a porta 3000 do contêiner para a porta 3000 do host
+    command: npm start  # Comando para iniciar o servidor Node.js

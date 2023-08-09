@@ -59,7 +59,9 @@ if (cluster.isMaster) {
         cors: {
             origin: [
                 'http://localhost', 
-                'https://ravinproject.github.io/'
+                'https://ravinproject.github.io/',
+                'http://vps48753.publiccloud.com.br',
+                'https://vps48753.publiccloud.com.br'
             ],
             methods: ["GET", "POST"]
         }

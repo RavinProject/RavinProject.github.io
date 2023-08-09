@@ -3,12 +3,6 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "aws-sdk": "latest",
-    "body-parser": "latest",
-    "dotenv": "latest",
-    "ejs": "latest",
-    "express": "latest",
-    "http": "latest",
     "socket.io": "latest"
   },
   "scripts": {
