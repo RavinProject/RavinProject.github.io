@@ -18,9 +18,7 @@ class Ravin {
      * @param {*} socket é a conexão do cliente
      * @param {*} message é a mensagem recebida
      */
-    novaSolicitacao(socket, m, callback){
-
-        let message = JSON.parse(m);
+    novaSolicitacao(socket, message, callback){
 
         // Valida a solicitação
         if (message.action === undefined || message.action.trim() === '') {
@@ -179,7 +177,7 @@ class Ravin {
      */
     notificaConexao(socket, message){
         // TODO localizar a conexao alvo pelo index
-        socket.emit('message', JSON.stringify(message));
+        socket.emit('message', {'notification': message});
     }
 
     /**
@@ -216,6 +214,8 @@ class Ravin {
     novoPedido(socket, params, callback){
     
         let pedido = params.pedido
+
+        console.log(pedido);
 
         // Cria um número para o pedido
         pedido.numero = listaPedidos.length + 1;

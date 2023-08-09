@@ -5,9 +5,9 @@ var itensList = null; //itens recuperados da API
 var objetoComanda = new Comanda(); // Objeto javascript para controlar toda a lógica local referente aos dados de uma comanda
 var objetoPedido = new Pedido();
 var listaPedidos = [];
-var serverAWS = true;
-const urlWebsocket = window.location.hostname === 'localhost' && !serverAWS ? 'localhost' : 'https://ravin-project.eba-u8hvijwt.sa-east-1.elasticbeanstalk.com';
-const portWebsocket = window.location.hostname === 'localhost' && !serverAWS ? '8080' : '80';
+var server_vps = false;
+const urlWebsocket = window.location.hostname === 'localhost' && !server_vps ? 'localhost' : 'https://vps48753.publiccloud.com.br';
+const portWebsocket = '3000';
 var socket = null;
 /** 
  * INICIALIZADORES GLOBAIS 
@@ -45,7 +45,7 @@ function startWebsocket() {
 
         // Evento antes do fechamento da página
         window.addEventListener('beforeunload', () => {
-            socket.emit('clienteFechouAbas'); // Enviar um aviso ao servidor
+            socket.emit({'action': 'clienteFechouAbas'}); // Enviar um aviso ao servidor
         });
 
     } else {
@@ -92,10 +92,10 @@ function atualizarPedidos(callback) {
     console.log('atualizando pedidos');
     
 
-    socket.emit('message', JSON.stringify({
+    socket.emit('message', {
         "action": "pegarListaPedidos",
         "params": {}
-    }), (respostaDoServidor) => {
+    }, (respostaDoServidor) => {
         let response = respostaDoServidor;
         console.log(response);
 
@@ -256,12 +256,12 @@ function fazerPedido() {
         objetoPedido.adicionarComanda(objetoComanda);
         objetoPedido.mesa = 1; // TODO implementar numeração de mesas
 
-        socket.emit('message', JSON.stringify({
+        socket.emit('message', {
             "action": "novoPedido",
             "params": {
                 "pedido": objetoPedido
             }
-        }), (respostaDoServidor) => {
+        }, (respostaDoServidor) => {
             if(respostaDoServidor === 'pedido_recebido'){
                 // remove o pedido do storage
                 localStorage.removeItem('pedido');
@@ -322,13 +322,13 @@ function formatarValorParaReais(valor) {
 
 function atualizaStatusPedido(pedidoNumero, e){
     console.log("Pedido " + pedidoNumero + " atualizado para: ", e.value);
-    socket.emit('message', JSON.stringify({
+    socket.emit('message', {
         "action": "atualizarStatusPedido",
         "params": {
             "numeroPedido": pedidoNumero,
             "status": e.value
         }
-    }), (respostaDoServidor)=>{
+    }, (respostaDoServidor)=>{
         alert(respostaDoServidor);
     });
 }

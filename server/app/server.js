@@ -26,7 +26,7 @@ if (cluster.isMaster) {
     // Code to run if we're in a worker process
 } else {
 
-    const port = 8080;
+    const port = 3000;
 
     // Importando as bibliotecas necessárias
     const http = require('http');
