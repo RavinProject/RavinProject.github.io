@@ -6,7 +6,7 @@ var objetoComanda = new Comanda(); // Objeto javascript para controlar toda a l√
 var objetoPedido = new Pedido();
 var listaPedidos = [];
 var server_vps = false;
-const urlWebsocket = window.location.hostname === 'localhost' && !server_vps ? 'localhost' : 'https://vps48753.publiccloud.com.br';
+const urlWebsocket = window.location.hostname === 'localhost' && !server_vps ? 'localhost' : 'wss://vps48753.publiccloud.com.br';
 const portWebsocket = '3000';
 var socket = null;
 /** 
