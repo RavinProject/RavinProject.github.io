@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+body{
+    background-image: url(../img/BackGroundLogin.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    
+    margin: 0;
+    outline: none;
+    box-sizing: border-box;
+    font-family: 'Noto Sans',sans-serif;
+}
+body *{
+    box-sizing: border-box;
+}
+.mainLogin{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: left;
+    align-items: left;
+}
+
+.leftLogin{
+    width:50vw;
+    height: 100vh;
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    flex-direction: column;
+}
+.leftLogin >h1{
+    font-size: 3vw;
+    color: whitesmoke;
+    text-align: left;
+    margin-left: 10%;
+    text-shadow: 0px 10px 40px #04030356;
+}
+
+
+
+.rightLogin{
+    width: 50vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.cardLogin{
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 30px  35px ;
+    background: rgb(71, 81, 87);
+    border-radius: 20px;
+    box-shadow: 0px 10px 40px #04030356;
+}
+.cardLogin >h1{
+    color: #ffffff;
+    font-weight: 800;
+    margin: 0;
+}
+
+.textfield{
+    width:100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 10px 0;
+}
+
+.textfield >input{
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    background: rgb(61, 69, 73);
+    color: #f0ffffde;
+    font-size: 12pt;
+    box-shadow: 0px 10px 40px #00000032;
+    outline: none;
+    box-sizing: border-box;
+}
+.textfield >label{
+    color: #f0ffffde;
+    margin-bottom: 10px;
+}
+.textfield >input::placeholder{
+    color: #ffffff94;
+}
+
+.btnLogin{
+    width: 100%;
+    padding: 16px 0 ;
+    margin: 25px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 3px;
+    background:rgb(242, 129, 35);
+    color: #ffffff;
+ 
+}
+
+.btnLogin:hover{
+    background:rgb(247, 165, 98);
+}
+
+.btnLogin:active{
+    background:rgb(208, 111, 31);
+}
+
+.login-message{
+    color: white;
+    font-weight:bold;
+    margin-top: 10px;
+}
+
+
+
